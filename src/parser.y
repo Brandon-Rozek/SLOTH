@@ -330,6 +330,11 @@ void delete_environment(struct Environment* env) {
   free(env);
 }
 
+void check_num_nodes(struct Node* node, int num_children, char* error) {
+  if (node && node->num_children != num_children) {
+    fprintf(stderr, "%s%s%s", "Error, ", error, "\n");
+  }
+}
 
 double eval_expression(struct Node* node, struct Environment* env) {
   /* base case */
@@ -337,98 +342,88 @@ double eval_expression(struct Node* node, struct Environment* env) {
     fprintf(stderr, "Error: No tree structure to evaluate\n");
     return 0;
   }
-  int nodeNotValid = !(
-    node->type == IDENTIFIER ||
-    node->type == VALUE ||
-    node->type == INPUT ||
-    node->type == PLUS ||
-    node->type == MINUS ||
-    node->type == DIVIDE ||
-    node->type == TIMES ||
-    node->type == LESS ||
-    node->type == GREATER ||
-    node->type == LESSEQ ||
-    node->type == GREATEREQ ||
-    node->type == EQUALS ||
-    node->type == NEQUALS ||
-    node->type == AND ||
-    node->type == OR ||
-    node->type == NOT 
-  );
-
-  if (nodeNotValid) {
-    fprintf(stderr,"Error, %d not a valid expression type.\n", node->type);
-    return 0;
-  }
 
   // Needed if we are going to take input from the user
   double temp;
   struct Variable* var = NULL;
 
+  // Evaluate subexpressions if existent
+  double val1, val2, val3;
+  if (node->num_children > 0) {
+    val1 = eval_expression(node->children[0], env);
+    if (node->num_children > 1) {
+      val2 = eval_expression(node->children[1], env);
+      if (node->num_children > 2) {
+        val3 = eval_expression(node->children[2], env);
+      }
+    }
+  }
+
   switch(node->type) {
     case PLUS:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot add more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) + eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot add more than two expressions.");
+      return val1 + val2;
       break;
     //----------
     case MINUS:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot subtract more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) - eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot subtract more than two expressions.");
+      return val1 - val2;
       break;
     //----------
     case DIVIDE:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot divide more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) / eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot divide more than two expressions.");
+      return val1 / val2;
       break;
     //----------
     case TIMES:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot multiply more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) * eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot multiply more than two expressions.");
+      return val1 * val2;
       break;
     //----------
     case LESS:
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
       if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) < eval_expression(node->children[1], env);
+      return val1 < val2;
       break;
     //----------
     case GREATER:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) > eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
+      return val1 > val2;
       break;
     //----------
     case LESSEQ:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) <= eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
+      return val1 <= val2;
       break;
     //----------
     case GREATEREQ:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) >= eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
+      return val1 >= val2;
       break;
     //----------
     case EQUALS:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) == eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
+      return val1 == val2;
       break;
     //----------
     case NEQUALS:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot compare more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) != eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot compare more than two expressions.");
+      return val1 != val2;
       break;
     //----------
     case AND:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot perform logical operators on more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) && eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot perform logical operators on more than two expressions.");
+      return val1 && val2;
       break;
     //----------
     case OR:
-      if (node->num_children != 2) { fprintf(stderr, "Error, cannot perform logical operators on more than two expressions.\n"); } 
-      return eval_expression(node->children[0], env) || eval_expression(node->children[1], env);
+      check_num_nodes(node, 2, "cannot perform logical operators on more than two expressions.");
+      return val1 || val2;
       break;
     //----------
     case NOT:
-      if (node->num_children != 1) { fprintf(stderr, "Error, cannot negate more than one expressions.\n"); } 
-      return !eval_expression(node->children[0], env);
+      check_num_nodes(node, 1, "cannot negate more than one expressions.");
+      return !val1;
       break;
     //----------
     case INPUT:
@@ -466,7 +461,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
 
   switch(node->type) {
     case ASSIGN:
-      if (node->num_children != 2) { fprintf(stderr, "Error: Cannot make an assignment without an identifier and a value.\n"); }
+      check_num_nodes(node, 2, "cannot make an assignment without an identifier and a value.");
       add_variable(env, 
         make_variable(node->children[0]->id, 
           eval_expression(node->children[1], env)));
@@ -482,13 +477,13 @@ void eval_statement(struct Node* node, struct Environment* env) {
       }
       break;
     case WHILE:
-      if (node->num_children != 2) { fprintf(stderr, "Error: The format of a while statement is while expression statement(s)\n"); }
+      check_num_nodes(node, 2, "the format of a while statement is: while expression statement(s)");
       while (eval_expression(node->children[0], env)) {
         eval_statement(node->children[1], env);
       }
       break;
     case PRINT:
-      if (node->num_children != 1) { fprintf(stderr, "Error: Can only print out one expression at a time.\n"); }
+      check_num_nodes(node, 1, "can only print out one expression at a time.");
       printf("%lf\n", eval_expression(node->children[0], env));
       break;
     case STATEMENT: // Can have a maximum of two children statement nodes
@@ -500,7 +495,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
       }
       break;
     default:
-      printf("Error, %d not a valid node type.\n", node->type);
+      printf("Error, %d not a valid statement type.\n", node->type);
       return;
   }
 }
