@@ -3,3 +3,5 @@ src/parser.tab.c
 src/parser.tab.h
 sloth
 vgcore*
+.vscode
+.vscode/*

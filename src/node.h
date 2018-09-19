@@ -34,6 +34,22 @@ struct Variable {
   double value;
 };
 
+typedef union typeval {
+        long num;
+        double dec;
+} TypeVal;
+
+struct Value {
+  int type;
+  TypeVal value;
+};
+
+// Value functions
+int get_int(struct Value* val);
+double get_double(struct Value* val);
+void set_int(struct Value* val);
+void set_double(struct Value* val);
+
 // Variable Functions
 struct Variable* make_variable(char* id, double value);
 void set_value(struct Variable* var, double value);
