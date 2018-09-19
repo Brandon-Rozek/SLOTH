@@ -212,8 +212,6 @@ void attach_node(struct Node* parent, struct Node* child) {
 }
 
 void print_tree(struct Node* node, int tabs) {
-  int i;
-
   /* base case */
   if(!node) {
     fprintf(stderr, "NO TREE STRUCTURE\n");
@@ -221,7 +219,7 @@ void print_tree(struct Node* node, int tabs) {
   }
 
   /* print leading tabs */
-  for(i = 0; i < tabs; i++) {
+  for(int i = 0; i < tabs; i++) {
     printf("    ");
   }
 
@@ -265,6 +263,7 @@ void delete_tree(struct Node* node) {
   }
   free(node);
 }
+
 /* creates a new variable and returns it */
 struct Variable* make_variable(char* id, double value) {
   /* allocate space */
@@ -282,6 +281,7 @@ void set_value(struct Variable* var, double value) {
   if (!var) { fprintf(stderr, "Error: Invalid Variable\n"); return; }
   var->value = value;
 }
+
 double get_value(struct Variable* var) {
   if (!var) { fprintf(stderr, "Error: Invalid Variable\n"); return 0; }
   return var->value;
@@ -295,6 +295,7 @@ struct Environment* create_environment(void) {
   }
   return env;
 }
+
 struct Variable* find_variable(struct Environment* env, char* id) {
   for (int i = 0; i < env->num_vars; i++) {
     if (strcmp(env->vars[i]->id, id) == 0) {
@@ -466,6 +467,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
         make_variable(node->children[0]->id, 
           eval_expression(node->children[1], env)));
       break;
+    //------------
     case IF:
       if (node->num_children != 2 && node->num_children != 3) { 
         fprintf(stderr, "Error: The format of an if-statement is if expression statement with an optional else.\n"); 
@@ -476,16 +478,19 @@ void eval_statement(struct Node* node, struct Environment* env) {
         eval_statement(node->children[2], env);
       }
       break;
+    //------------
     case WHILE:
       check_num_nodes(node, 2, "the format of a while statement is: while expression statement(s)");
       while (eval_expression(node->children[0], env)) {
         eval_statement(node->children[1], env);
       }
       break;
+    //------------
     case PRINT:
       check_num_nodes(node, 1, "can only print out one expression at a time.");
       printf("%lf\n", eval_expression(node->children[0], env));
       break;
+    //------------
     case STATEMENT: // Can have a maximum of two children statement nodes
       if (node->num_children > 0) {
         eval_statement(node->children[0], env);
@@ -494,6 +499,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
         eval_statement(node->children[1], env);
       }
       break;
+    //------------
     default:
       printf("Error, %d not a valid statement type.\n", node->type);
       return;
