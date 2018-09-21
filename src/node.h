@@ -50,6 +50,9 @@ struct Value {
 struct Value* make_value(int type, long num, double dec);
 struct Value* make_long(long num);
 struct Value* make_double(double dec);
+struct Value* make_true();
+struct Value* make_false();
+
 void delete_value(struct Value* val);
 long get_long(struct Value* val);
 double get_double(struct Value* val);

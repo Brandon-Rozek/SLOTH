@@ -51,8 +51,6 @@ struct Node* result;
 %token COMMENT            
 %token WHITESPACE   
 %token DONE
-%token <value> ETRUE
-%token <value> EFALSE
 
 /* declare non-terminals */
 %type <value> program statement assignment if-statement if-else-statement while print statements substatements expression subexpression term subterm factor atom identvalue ident
@@ -140,8 +138,6 @@ ident: IDENTIFIER { $$ = $1; }
 identvalue: IDENTIFIER { $$ = $1; }
           | VALUE { $$ = $1; }
           | INPUT { $$ = make_node(INPUT, NULL , ""); }
-          | ETRUE  { $$ = $1; }
-          | EFALSE { $$ = $1; }
 
 
 
@@ -360,7 +356,7 @@ struct Value* make_value(int type, long num, double dec) {
 
   /* set properties */
   val->type = type;
-  if (type == LONG) {
+  if (type == LONG || type == BOOLEAN) {
     val->value.num = num;
   } else { // Assume DOUBLE
     val->value.dec = dec;
@@ -376,6 +372,18 @@ struct Value* make_long(long num) {
 
 struct Value* make_double(double dec) {
   return make_value(DOUBLE, 0, dec);
+}
+
+struct Value* make_true() {
+  return make_value(BOOLEAN, 1, 0);
+}
+
+struct Value* make_false() {
+  return make_value(BOOLEAN, 0, 0);
+}
+
+struct Value* make_boolean(int x) {
+  return (x)? make_true() : make_false();
 }
 
 void delete_value(struct Value* val) {
@@ -398,7 +406,8 @@ void set_double(struct Value* val, double dec) {
 
 struct Value* add(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in add.\n"); }
-
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot add a boolean.\n"); }
+  
   struct Value* ans;
 
   // Destruct all four cases
@@ -417,6 +426,7 @@ struct Value* add(struct Value* x, struct Value* y) {
 
 struct Value* subtract(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in subtract.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot subtract a boolean.\n"); }
   
   struct Value* ans;
 
@@ -436,6 +446,7 @@ struct Value* subtract(struct Value* x, struct Value* y) {
 
 struct Value* division(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in divide.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot divide a boolean.\n"); }
   
   struct Value* ans;
 
@@ -455,6 +466,7 @@ struct Value* division(struct Value* x, struct Value* y) {
 
 struct Value* multiplication(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in multiply.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot multiply a boolean.\n"); }
   
   struct Value* ans;
 
@@ -474,18 +486,19 @@ struct Value* multiplication(struct Value* x, struct Value* y) {
 
 struct Value* less(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in <.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot numerically compare a boolean.\n"); }
 
   struct Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) < get_long(y));
+    ans = make_boolean(get_long(x) < get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) < get_double(y));
+    ans = make_boolean(get_long(x) < get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) < get_long(y));
+    ans = make_boolean(get_double(x) < get_long(y));
   } else { // Both are DOUBLE
-    ans = make_double(get_double(x) < get_double(y));
+    ans = make_boolean(get_double(x) < get_double(y));
   }
 
   return ans;
@@ -493,18 +506,19 @@ struct Value* less(struct Value* x, struct Value* y) {
 
 struct Value* greater(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in greater.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot numerically compare a boolean.\n"); }
 
   struct Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) > get_long(y));
+    ans = make_boolean(get_long(x) > get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) > get_double(y));
+    ans = make_boolean(get_long(x) > get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) > get_long(y));
+    ans = make_boolean(get_double(x) > get_long(y));
   } else { // Both are DOUBLE
-    ans = make_double(get_double(x) > get_double(y));
+    ans = make_boolean(get_double(x) > get_double(y));
   }
 
   return ans;
@@ -512,18 +526,19 @@ struct Value* greater(struct Value* x, struct Value* y) {
 
 struct Value* less_equal(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in <=.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot numerically compare a boolean.\n"); }
 
   struct Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) <= get_long(y));
+    ans = make_boolean(get_long(x) <= get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) <= get_double(y));
+    ans = make_boolean(get_long(x) <= get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) <= get_long(y));
+    ans = make_boolean(get_double(x) <= get_long(y));
   } else { // Both are DOUBLE
-    ans = make_double(get_double(x) <= get_double(y));
+    ans = make_boolean(get_double(x) <= get_double(y));
   }
 
   return ans;
@@ -531,17 +546,19 @@ struct Value* less_equal(struct Value* x, struct Value* y) {
 
 struct Value* greater_equal(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in >=.\n"); }
+  if (x->type == BOOLEAN || y->type == BOOLEAN) { fprintf(stderr, "Error, cannot numerically compare a boolean.\n"); }
+
   struct Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) >= get_long(y));
+    ans = make_boolean(get_long(x) >= get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) >= get_double(y));
+    ans = make_boolean(get_long(x) >= get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) >= get_long(y));
+    ans = make_boolean(get_double(x) >= get_long(y));
   } else { // Both are DOUBLE
-    ans = make_double(get_double(x) >= get_double(y));
+    ans = make_boolean(get_double(x) >= get_double(y));
   }
 
   return ans;
@@ -554,13 +571,17 @@ struct Value* equals(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) == get_long(y));
+    ans = make_boolean(get_long(x) == get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) == get_double(y));
+    ans = make_boolean(get_long(x) == get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) == get_long(y));
-  } else { // Both are DOUBLE
-    ans = make_double(get_double(x) == get_double(y));
+    ans = make_boolean(get_double(x) == get_long(y));
+  } else if (x->type == DOUBLE && y->type == DOUBLE) {
+    ans = make_boolean(get_double(x) == get_double(y));
+  } else if (x->type == BOOLEAN && y->type == BOOLEAN) {
+    ans = make_boolean(get_long(x) == get_long(y));
+  } else { // Type is a mix between boolean and another type
+    fprintf(stderr, "Error, cannot compare a boolean with another type.\n");
   }
 
   return ans;
@@ -573,13 +594,17 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) != get_long(y));
+    ans = make_boolean(get_long(x) != get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) != get_double(y));
+    ans = make_boolean(get_long(x) != get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) != get_long(y));
-  } else { // Both are DOUBLE
-    ans = make_double(get_double(x) != get_double(y));
+    ans = make_boolean(get_double(x) != get_long(y));
+  } else if (x->type == DOUBLE && y->type == DOUBLE) {
+    ans = make_boolean(get_double(x) != get_double(y));
+  } else if (x->type == BOOLEAN && y->type == BOOLEAN) {
+    ans = make_boolean(get_long(x) != get_long(y));
+  } else { // Type is a mix between boolean and another type
+    fprintf(stderr, "Error, cannot compare a boolean with another type.\n");
   }
 
   return ans;
@@ -587,55 +612,23 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
 
 struct Value* and(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in &&.\n"); }
+  if (x->type != BOOLEAN || y->type != BOOLEAN) { fprintf(stderr, "Error, cannot use and AND operation with a non-boolean.\n"); }
 
-  struct Value* ans;
-
-  // Destruct all four cases
-  if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) && get_long(y));
-  } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) && get_double(y));
-  } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) && get_long(y));
-  } else { // Both are DOUBLE
-    ans = make_double(get_double(x) && get_double(y));
-  }
-
-  return ans;
+  return make_boolean(get_long(x) && get_long(y));
 }
 
 struct Value* or(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in ||.\n"); }
+  if (x->type != BOOLEAN || y->type != BOOLEAN) { fprintf(stderr, "Error, cannot use and OR operation with a non-boolean.\n"); }
 
-  struct Value* ans;
-
-  // Destruct all four cases
-  if (x->type == LONG && y->type == LONG) {
-    ans = make_long(get_long(x) || get_long(y));
-  } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_double(get_long(x) || get_double(y));
-  } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_double(get_double(x) || get_long(y));
-  } else { // Both are DOUBLE
-    ans = make_double(get_double(x) || get_double(y));
-  }
-
-  return ans;
+  return make_boolean(get_long(x) || get_long(y));
 }
 
 struct Value* not(struct Value* x) {
   if (!x) { fprintf(stderr, "Error, uninitialized values being used in !.\n"); }
+  if (x->type != BOOLEAN) { fprintf(stderr, "Error, cannot NOT a non-boolean.\n"); }
 
-  struct Value* ans;
-
-  // Destruct all two cases
-  if (x->type == LONG) {
-    ans = make_long(!get_long(x));
-  } else { // Assume it's a double
-    ans = make_double(!get_double(x));
-  }
-
-  return ans;
+  return make_boolean(!get_long(x));
 }
 
 struct Value* eval_expression(struct Node* node, struct Environment* env) {
@@ -747,7 +740,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
     case INPUT: // We're only going to support reading in doubles
       // Look into deleting possible values...?
       scanf("%lf", &temp);
-      return make_value(DOUBLE, 0, temp);
+      return make_double(temp);
       break;
     //----------
     case IDENTIFIER:
@@ -792,34 +785,27 @@ void eval_statement(struct Node* node, struct Environment* env) {
         fprintf(stderr, "Error: The format of an if-statement is if expression statement with an optional else.\n"); 
       }
       tempVal = eval_expression(node->children[0], env);
-      if (tempVal->type == LONG) {
+      if (tempVal->type == BOOLEAN) {
         if (get_long(tempVal)) {
           eval_statement(node->children[1], env);
         } else if (node->num_children == 3) {
         eval_statement(node->children[2], env);
         }
-      } else { // Assume DOUBLE
-        if (get_double(tempVal)) {
-          eval_statement(node->children[1], env);
-        } else if (node->num_children == 3) {
-        eval_statement(node->children[2], env);
-        }
+      } else {
+        fprintf(stderr, "Error, a non-boolean was in the condition of an if statement.\n");
       }
       break;
     //------------
     case WHILE:
       check_num_nodes(node, 2, "the format of a while statement is: while expression statement(s)");
       tempVal = eval_expression(node->children[0], env);
-      if (tempVal->type == LONG) {
+      if (tempVal->type == BOOLEAN) {
         while (get_long(tempVal)) {
           eval_statement(node->children[1], env);
           tempVal = eval_expression(node->children[0], env);
         }
-      } else { // Assume DOUBLE
-        while (get_double(tempVal)) {
-          eval_statement(node->children[1], env);
-          tempVal = eval_expression(node->children[0], env);
-        }
+      } else {
+        fprintf(stderr, "Error, a non-boolean was in the condition of the while loop.\n");
       }
 
       break;

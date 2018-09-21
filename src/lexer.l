@@ -39,8 +39,8 @@ DIGIT [0-9]
 "while"                 {return WHILE;}
 "print"                 {return PRINT;}
 "input"                 {return INPUT;}
-"true"                  {yylval.value = make_node(BOOLEAN, make_value(LONG, 1, 0), ""); return ETRUE;}
-"false"                 {yylval.value = make_node(BOOLEAN, make_value(LONG, 0, 0), ""); return EFALSE;}
+"true"                  {yylval.value = make_node(VALUE, make_value(BOOLEAN, 1, 0), ""); return VALUE;}
+"false"                 {yylval.value = make_node(VALUE, make_value(BOOLEAN, 0, 0), ""); return VALUE;}
 {DIGIT}                 {yylval.value = make_node(VALUE, make_value(LONG, atoi(yytext), 0), ""); return VALUE;}
 {DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_value(DOUBLE, 0, atof(yytext)), ""); return VALUE;}
 [_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  NULL, strdup(yytext)); return IDENTIFIER;}
