@@ -369,6 +369,15 @@ struct Value* make_value(int type, long num, double dec) {
   /* return new variable */
   return val;
 }
+
+struct Value* make_long(long num) {
+  return make_value(LONG, num, 0);
+}
+
+struct Value* make_double(double dec) {
+  return make_value(DOUBLE, 0, dec);
+}
+
 void delete_value(struct Value* val) {
   free(val);
 }
@@ -386,6 +395,7 @@ void set_double(struct Value* val, double dec) {
   val->type = DOUBLE;
   val->value.dec = dec;
 }
+
 struct Value* add(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in add.\n"); }
 
@@ -393,13 +403,13 @@ struct Value* add(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) + get_long(y), 0);
+    ans = make_long(get_long(x) + get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) + get_double(y));
+    ans = make_double(get_long(x) + get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) + get_long(y));
+    ans = make_double(get_double(x) + get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) + get_double(y));
+    ans = make_double(get_double(x) + get_double(y));
   }
 
   return ans;
@@ -412,13 +422,13 @@ struct Value* subtract(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) - get_long(y), 0);
+    ans = make_long(get_long(x) - get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) - get_double(y));
+    ans = make_double(get_long(x) - get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) - get_long(y));
+    ans = make_double(get_double(x) - get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) - get_double(y));
+    ans = make_double(get_double(x) - get_double(y));
   }
 
   return ans;
@@ -431,13 +441,13 @@ struct Value* division(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) / get_long(y), 0);
+    ans = make_long(get_long(x) / get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) / get_double(y));
+    ans = make_double(get_long(x) / get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) / get_long(y));
+    ans = make_double(get_double(x) / get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) / get_double(y));
+    ans = make_double(get_double(x) / get_double(y));
   }
 
   return ans;
@@ -450,13 +460,13 @@ struct Value* multiplication(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) * get_long(y), 0);
+    ans = make_long(get_long(x) * get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) * get_double(y));
+    ans = make_double(get_long(x) * get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) * get_long(y));
+    ans = make_double(get_double(x) * get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) * get_double(y));
+    ans = make_double(get_double(x) * get_double(y));
   }
 
   return ans;
@@ -469,13 +479,13 @@ struct Value* less(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) < get_long(y), 0);
+    ans = make_long(get_long(x) < get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) < get_double(y));
+    ans = make_double(get_long(x) < get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) < get_long(y));
+    ans = make_double(get_double(x) < get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) < get_double(y));
+    ans = make_double(get_double(x) < get_double(y));
   }
 
   return ans;
@@ -488,13 +498,13 @@ struct Value* greater(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) > get_long(y), 0);
+    ans = make_long(get_long(x) > get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) > get_double(y));
+    ans = make_double(get_long(x) > get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) > get_long(y));
+    ans = make_double(get_double(x) > get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) > get_double(y));
+    ans = make_double(get_double(x) > get_double(y));
   }
 
   return ans;
@@ -507,13 +517,13 @@ struct Value* less_equal(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) <= get_long(y), 0);
+    ans = make_long(get_long(x) <= get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) <= get_double(y));
+    ans = make_double(get_long(x) <= get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) <= get_long(y));
+    ans = make_double(get_double(x) <= get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) <= get_double(y));
+    ans = make_double(get_double(x) <= get_double(y));
   }
 
   return ans;
@@ -525,13 +535,13 @@ struct Value* greater_equal(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) >= get_long(y), 0);
+    ans = make_long(get_long(x) >= get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) >= get_double(y));
+    ans = make_double(get_long(x) >= get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) >= get_long(y));
+    ans = make_double(get_double(x) >= get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) >= get_double(y));
+    ans = make_double(get_double(x) >= get_double(y));
   }
 
   return ans;
@@ -544,13 +554,13 @@ struct Value* equals(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) == get_long(y), 0);
+    ans = make_long(get_long(x) == get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) == get_double(y));
+    ans = make_double(get_long(x) == get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) == get_long(y));
+    ans = make_double(get_double(x) == get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) == get_double(y));
+    ans = make_double(get_double(x) == get_double(y));
   }
 
   return ans;
@@ -563,13 +573,13 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) != get_long(y), 0);
+    ans = make_long(get_long(x) != get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) != get_double(y));
+    ans = make_double(get_long(x) != get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) != get_long(y));
+    ans = make_double(get_double(x) != get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) != get_double(y));
+    ans = make_double(get_double(x) != get_double(y));
   }
 
   return ans;
@@ -582,13 +592,13 @@ struct Value* and(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) && get_long(y), 0);
+    ans = make_long(get_long(x) && get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) && get_double(y));
+    ans = make_double(get_long(x) && get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) && get_long(y));
+    ans = make_double(get_double(x) && get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) && get_double(y));
+    ans = make_double(get_double(x) && get_double(y));
   }
 
   return ans;
@@ -601,13 +611,13 @@ struct Value* or(struct Value* x, struct Value* y) {
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
-    ans = make_value(LONG, get_long(x) || get_long(y), 0);
+    ans = make_long(get_long(x) || get_long(y));
   } else if (x->type == LONG && y->type == DOUBLE) {
-    ans = make_value(DOUBLE, 0, get_long(x) || get_double(y));
+    ans = make_double(get_long(x) || get_double(y));
   } else if (x->type == DOUBLE && y->type == LONG) {
-    ans = make_value(DOUBLE, 0, get_double(x) || get_long(y));
+    ans = make_double(get_double(x) || get_long(y));
   } else { // Both are DOUBLE
-    ans = make_value(DOUBLE, 0, get_double(x) || get_double(y));
+    ans = make_double(get_double(x) || get_double(y));
   }
 
   return ans;
@@ -620,9 +630,9 @@ struct Value* not(struct Value* x) {
 
   // Destruct all two cases
   if (x->type == LONG) {
-    ans = make_value(LONG, !get_long(x), 0);
+    ans = make_long(!get_long(x));
   } else { // Assume it's a double
-    ans = make_value(DOUBLE, 0, !get_double(x));
+    ans = make_double(!get_double(x));
   }
 
   return ans;

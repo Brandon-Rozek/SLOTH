@@ -6,9 +6,7 @@
 #define STATEMENT 200
 #define MAX_VARIABLES 200
 
-#define DOUBLE 300
-#define LONG 301
-#define BOOLEAN 302
+enum TypeTag { DOUBLE, LONG, BOOLEAN };
 
 // Share the line number between files
 extern int linenum;
@@ -44,12 +42,14 @@ typedef union typeval {
 } TypeVal;
 
 struct Value {
-  int type;
+  enum TypeTag type;
   TypeVal value;
 };
 
 // Value functions
 struct Value* make_value(int type, long num, double dec);
+struct Value* make_long(long num);
+struct Value* make_double(double dec);
 void delete_value(struct Value* val);
 long get_long(struct Value* val);
 double get_double(struct Value* val);
