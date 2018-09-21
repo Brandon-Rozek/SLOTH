@@ -6,13 +6,16 @@
 #define STATEMENT 200
 #define MAX_VARIABLES 200
 
+#define DOUBLE 300
+#define LONG 301
+
 // Share the line number between files
 extern int linenum;
 
 /* a tree node definition */
 struct Node {
   int type;
-  double value;
+  struct Value* value;
 
   /* the id of the node (used for identifiers only) */
   char id[ID_SIZE];
@@ -23,7 +26,7 @@ struct Node {
 };
 
 // Abstract Syntax Tree Functions
-struct Node* make_node(int type, double value, char* id);
+struct Node* make_node(int type, struct Value* value, char* id);
 void attach_node(struct Node* parent, struct Node* child);
 void print_tree(struct Node* node, int tabs);
 void delete_tree(struct Node* node);
@@ -31,7 +34,7 @@ void delete_tree(struct Node* node);
 
 struct Variable {
   char id[ID_SIZE];
-  double value;
+  struct Value* value;
 };
 
 typedef union typeval {
@@ -45,15 +48,17 @@ struct Value {
 };
 
 // Value functions
-int get_int(struct Value* val);
+struct Value* make_value(int type, long num, double dec);
+void delete_value(struct Value* val);
+long get_long(struct Value* val);
 double get_double(struct Value* val);
-void set_int(struct Value* val);
-void set_double(struct Value* val);
+void set_long(struct Value* val, long num);
+void set_double(struct Value* val, double dec);
 
 // Variable Functions
-struct Variable* make_variable(char* id, double value);
-void set_value(struct Variable* var, double value);
-double get_value(struct Variable* var);
+struct Variable* make_variable(char* id, struct Value* value);
+void set_value(struct Variable* var, struct Value* value);
+struct Value* get_value(struct Variable* var);
 
 struct Environment {
   int num_vars;
@@ -69,6 +74,6 @@ void add_variable(struct Environment* env, struct Variable* var);
 
 // Interpreting AST
 void eval_statement(struct Node* node, struct Environment* env);
-double eval_expression(struct Node* node, struct Environment* env);
+struct Value* eval_expression(struct Node* node, struct Environment* env);
 
 #endif

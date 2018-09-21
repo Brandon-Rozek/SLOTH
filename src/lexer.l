@@ -39,8 +39,9 @@ DIGIT [0-9]
 "while"                 {return WHILE;}
 "print"                 {return PRINT;}
 "input"                 {return INPUT;}
-{DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, atof(yytext), ""); return VALUE;}
-[_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  0, strdup(yytext)); return IDENTIFIER;}
+{DIGIT}                 {yylval.value = make_node(VALUE, make_value(LONG, atoi(yytext), 0), ""); return VALUE;}
+{DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_value(DOUBLE, 0, atof(yytext)), ""); return VALUE;}
+[_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  NULL, strdup(yytext)); return IDENTIFIER;}
 [\n]                    {linenum++;} 
 [ \t\r]+                {}
 .                       {printf("Error: invlaid lexeme '%s'.\n", yytext); return 0;}
