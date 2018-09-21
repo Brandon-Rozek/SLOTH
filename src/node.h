@@ -8,6 +8,7 @@
 
 #define DOUBLE 300
 #define LONG 301
+#define BOOLEAN 302
 
 // Share the line number between files
 extern int linenum;

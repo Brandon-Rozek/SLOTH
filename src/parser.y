@@ -51,6 +51,8 @@ struct Node* result;
 %token COMMENT            
 %token WHITESPACE   
 %token DONE
+%token <value> ETRUE
+%token <value> EFALSE
 
 /* declare non-terminals */
 %type <value> program statement assignment if-statement if-else-statement while print statements substatements expression subexpression term subterm factor atom identvalue ident
@@ -138,6 +140,8 @@ ident: IDENTIFIER { $$ = $1; }
 identvalue: IDENTIFIER { $$ = $1; }
           | VALUE { $$ = $1; }
           | INPUT { $$ = make_node(INPUT, NULL , ""); }
+          | ETRUE  { $$ = $1; }
+          | EFALSE { $$ = $1; }
 
 
 
@@ -246,7 +250,13 @@ void print_tree(struct Node* node, int tabs) {
     case INPUT: printf("INPUT:\n"); break;
     case STATEMENT: printf("STATEMENT:\n"); break;
     case VALUE: 
-      if (node->value->type == LONG) {
+      if (node->value->type == BOOLEAN) {
+        if (get_long(node->value)) {
+          printf("VALUE: true\n");
+        } else {
+          printf("VALUE: false\n");
+        }
+      } else if (node->value->type == LONG) {
         printf("VALUE: %li\n", get_long(node->value));
       } else { // Assume double
         printf("VALUE: %lf\n", get_double(node->value));
@@ -807,7 +817,13 @@ void eval_statement(struct Node* node, struct Environment* env) {
     case PRINT:
       check_num_nodes(node, 1, "can only print out one expression at a time.");
       tempVal = eval_expression(node->children[0], env);
-      if (tempVal->type == LONG) {
+      if (tempVal->type == BOOLEAN) { 
+        if (get_long(tempVal)) {
+          printf("true\n");
+        } else {
+          printf("false\n");
+        }
+      } else if (tempVal->type == LONG) {
         printf("%li\n", get_long(tempVal));
       } else {
         printf("%lf\n", get_double(tempVal));
