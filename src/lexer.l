@@ -39,6 +39,8 @@ DIGIT [0-9]
 "while"                 {return WHILE;}
 "print"                 {return PRINT;}
 "input"                 {return INPUT;}
+"lambda"                {return LAMBDA;}
+":"                     {return COLON;}
 "true"                  {yylval.value = make_node(VALUE, make_value(BOOLEAN, 1, 0), ""); return VALUE;}
 "false"                 {yylval.value = make_node(VALUE, make_value(BOOLEAN, 0, 0), ""); return VALUE;}
 {DIGIT}                 {yylval.value = make_node(VALUE, make_value(LONG, atoi(yytext), 0), ""); return VALUE;}

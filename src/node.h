@@ -4,6 +4,7 @@
 #define ID_SIZE 100
 #define MAX_CHILDREN 3
 #define STATEMENT 200
+#define CALLFUNC 201
 #define MAX_VARIABLES 200
 
 enum TypeTag { DOUBLE, LONG, BOOLEAN };

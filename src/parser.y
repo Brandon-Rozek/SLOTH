@@ -51,9 +51,11 @@ struct Node* result;
 %token COMMENT            
 %token WHITESPACE   
 %token DONE
+%token <value> LAMBDA
+%token COLON
 
 /* declare non-terminals */
-%type <value> program statement assignment if-statement if-else-statement while print statements substatements expression subexpression term subterm factor atom identvalue ident
+%type <value> program statement assignment if-statement if-else-statement while print statements substatements callfunc expression subexpression term subterm factor atom identvalue ident
 
 /* give us more detailed errors */
 %error-verbose
@@ -135,9 +137,17 @@ atom: OPENPAREM expression ENDPAREM { $$ = $2; }
 
 ident: IDENTIFIER { $$ = $1; }
 
-identvalue: IDENTIFIER { $$ = $1; }
+callfunc: ident OPENPAREM ident ENDPAREM { $$ = make_node(CALLFUNC, NULL, 0); attach_node($$, $1); attach_node($$, $3); }
+
+identvalue: callfunc { $$ = $1; }
+          | ident { $$ = $1; }
           | VALUE { $$ = $1; }
           | INPUT { $$ = make_node(INPUT, NULL , ""); }
+          | LAMBDA ident COLON expression { 
+              // Only supports one argument functions for now
+              $$ = make_node(LAMBDA, NULL, "");
+              attach_node($$, $2);
+              attach_node($$, $4); }
 
 
 
@@ -244,6 +254,7 @@ void print_tree(struct Node* node, int tabs) {
     case WHILE: printf("WHILE:\n"); break;
     case PRINT: printf("PRINT:\n"); break;
     case INPUT: printf("INPUT:\n"); break;
+    case LAMBDA: printf("LAMBDA:\n"); break;
     case STATEMENT: printf("STATEMENT:\n"); break;
     case VALUE: 
       if (node->value->type == BOOLEAN) {
@@ -642,11 +653,11 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   double temp;
   struct Variable* var = NULL;
 
-  // Evaluate subexpressions if existent
+  // Evaluate subexpressions if existent and node is not a lambda expression
   struct Value* val1 = NULL;
   struct Value* val2 = NULL;
   struct Value* val3 = NULL;
-  if (node->num_children > 0) {
+  if (node->num_children > 0 && node->type != LAMBDA) {
     val1 = eval_expression(node->children[0], env);
     if (node->num_children > 1) {
       val2 = eval_expression(node->children[1], env);
@@ -658,6 +669,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   }
 
   switch(node->type) {
+    case LAMBDA: printf("<LambdaExpression>\n"); return make_long(0); break;
     case PLUS:
       check_num_nodes(node, 2, "cannot add more than two expressions.");
       return add(val1, val2);
