@@ -55,7 +55,7 @@ struct Node* result;
 %token COLON
 
 /* declare non-terminals */
-%type <value> program statement assignment if-statement if-else-statement while print statements substatements callfunc expression subexpression term subterm factor atom identvalue ident
+%type <value> program statement assignment if-statement if-else-statement while print statements substatements callfunc exprlambda expression subexpression term subterm factor atom identvalue ident
 
 /* give us more detailed errors */
 %error-verbose
@@ -71,7 +71,7 @@ statement: assignment { $$ = $1; }
          | print { $$ = $1; }
          | statements { $$ = $1; } 
 
-assignment: ident ASSIGN expression SEMICOLON {
+assignment: ident ASSIGN exprlambda SEMICOLON {
     $$ = make_node(ASSIGN, NULL, "");
     attach_node($$, $1);
     attach_node($$, $3);
@@ -96,7 +96,7 @@ while: WHILE expression DO statement {
     attach_node($$, $4);
 }
 
-print: PRINT expression SEMICOLON {
+print: PRINT exprlambda SEMICOLON {
     $$ = make_node(PRINT, NULL, "");
     attach_node($$, $2);
 }
@@ -108,7 +108,14 @@ statements: BEGINTOK substatements END { $$ = $2; }
 substatements: statement substatements {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); attach_node($$, $2); }
               | statement  {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); }
 
-expression : expression OR subexpression { $$ = make_node(OR, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+exprlambda: LAMBDA ident COLON expression { 
+              // Only supports one argument functions for now
+              $$ = make_node(LAMBDA, NULL, "");
+              attach_node($$, $2);
+              attach_node($$, $4); }
+        | expression { $$ = $1; }
+
+expression: expression OR subexpression { $$ = make_node(OR, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
      | expression AND subexpression { $$ = make_node(AND, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
      | subexpression { $$ = $1; }
 
@@ -132,22 +139,18 @@ factor : MINUS factor { $$ = make_node(MINUS, NULL, ""); attach_node($$, $2); }
        | NOT factor { $$ = make_node(NOT, NULL, ""); attach_node($$, $2); }
        | atom { $$ = $1; }
 
+callfunc: ident OPENPAREM expression ENDPAREM { $$ = make_node(CALLFUNC, NULL, ""); attach_node($$, $1); attach_node($$, $3); }
+
 atom: OPENPAREM expression ENDPAREM { $$ = $2; }
+    | callfunc { $$ = $1; }
     | identvalue { $$ = $1; }
 
 ident: IDENTIFIER { $$ = $1; }
 
-callfunc: ident OPENPAREM ident ENDPAREM { $$ = make_node(CALLFUNC, NULL, 0); attach_node($$, $1); attach_node($$, $3); }
-
-identvalue: callfunc { $$ = $1; }
-          | ident { $$ = $1; }
+identvalue: ident { $$ = $1; }
           | VALUE { $$ = $1; }
           | INPUT { $$ = make_node(INPUT, NULL , ""); }
-          | LAMBDA ident COLON expression { 
-              // Only supports one argument functions for now
-              $$ = make_node(LAMBDA, NULL, "");
-              attach_node($$, $2);
-              attach_node($$, $4); }
+
 
 
 
@@ -255,6 +258,7 @@ void print_tree(struct Node* node, int tabs) {
     case PRINT: printf("PRINT:\n"); break;
     case INPUT: printf("INPUT:\n"); break;
     case LAMBDA: printf("LAMBDA:\n"); break;
+    case CALLFUNC: printf("FUNCTIONCALL:\n"); break;
     case STATEMENT: printf("STATEMENT:\n"); break;
     case VALUE: 
       if (node->value->type == BOOLEAN) {
@@ -361,7 +365,7 @@ void check_num_nodes(struct Node* node, int num_children, char* error) {
   }
 }
 
-struct Value* make_value(int type, long num, double dec) {
+struct Value* make_value(int type, long num, double dec, struct Node* expr) {
     /* allocate space */
   struct Value* val = malloc(sizeof(struct Value));
 
@@ -369,8 +373,10 @@ struct Value* make_value(int type, long num, double dec) {
   val->type = type;
   if (type == LONG || type == BOOLEAN) {
     val->value.num = num;
-  } else { // Assume DOUBLE
+  } else if (type == DOUBLE){ // Assume DOUBLE
     val->value.dec = dec;
+  } else { // Assume lambda expression
+    val->value.expr = expr;
   }
 
   /* return new variable */
@@ -378,34 +384,38 @@ struct Value* make_value(int type, long num, double dec) {
 }
 
 struct Value* make_long(long num) {
-  return make_value(LONG, num, 0);
+  return make_value(LONG, num, 0, NULL);
 }
-
 struct Value* make_double(double dec) {
-  return make_value(DOUBLE, 0, dec);
+  return make_value(DOUBLE, 0, dec, NULL);
 }
-
 struct Value* make_true() {
-  return make_value(BOOLEAN, 1, 0);
+  return make_value(BOOLEAN, 1, 0, NULL);
 }
-
 struct Value* make_false() {
-  return make_value(BOOLEAN, 0, 0);
+  return make_value(BOOLEAN, 0, 0, NULL);
 }
-
 struct Value* make_boolean(int x) {
   return (x)? make_true() : make_false();
+}
+struct Value* make_expression(struct Node* expr) {
+  return make_value(LAMBDA, 0, 0, expr);
 }
 
 void delete_value(struct Value* val) {
   free(val);
 }
+
 long get_long(struct Value* val) {
   return val->value.num;
 }
 double get_double(struct Value* val) {
   return val->value.dec;
 }
+struct Node* get_expression(struct Value* val) {
+  return val->value.expr;
+}
+
 void set_long(struct Value* val, long num) {
   val->type = LONG;
   val->value.num = num;
@@ -413,6 +423,10 @@ void set_long(struct Value* val, long num) {
 void set_double(struct Value* val, double dec) {
   val->type = DOUBLE;
   val->value.dec = dec;
+}
+void set_expression(struct Value* val, struct Node* expr) {
+  val->type = LAMBDA;
+  val->value.expr = expr;
 }
 
 struct Value* add(struct Value* x, struct Value* y) {
@@ -652,6 +666,9 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   // Needed if we are going to take input from the user
   double temp;
   struct Variable* var = NULL;
+  struct Environment* local_env = NULL;
+  struct Node* tempNode = NULL;
+  struct Value* tempVal = NULL;
 
   // Evaluate subexpressions if existent and node is not a lambda expression
   struct Value* val1 = NULL;
@@ -669,7 +686,18 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   }
 
   switch(node->type) {
-    case LAMBDA: printf("<LambdaExpression>\n"); return make_long(0); break;
+    case LAMBDA: return make_expression(node); break;
+    case CALLFUNC:
+      check_num_nodes(node, 2, "cannot have more than two nodes for a function call.");
+      tempNode = get_expression(get_value(find_variable(env, node->children[0]->id)));
+      local_env = create_environment();
+      add_variable(local_env, 
+        make_variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
+          eval_expression(node->children[1], env)));
+      tempVal =  eval_expression(tempNode->children[1], local_env);
+      delete_environment(local_env);
+      return tempVal;
+      break;
     case PLUS:
       check_num_nodes(node, 2, "cannot add more than two expressions.");
       return add(val1, val2);
@@ -782,6 +810,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
     fprintf(stderr, "Error: No tree structure to evaluate\n");
     return;
   }
+
   struct Value* tempVal;
 
   switch(node->type) {
@@ -833,8 +862,10 @@ void eval_statement(struct Node* node, struct Environment* env) {
         }
       } else if (tempVal->type == LONG) {
         printf("%li\n", get_long(tempVal));
-      } else {
+      } else if (tempVal ->type == DOUBLE) {
         printf("%lf\n", get_double(tempVal));
+      } else { // Assume lambda expression
+        printf("<LambdaExpression>\n");
       }
       break;
     //------------

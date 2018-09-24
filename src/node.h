@@ -40,6 +40,7 @@ struct Variable {
 typedef union typeval {
         long num;
         double dec;
+        struct Node* expr;
 } TypeVal;
 
 struct Value {
@@ -48,7 +49,7 @@ struct Value {
 };
 
 // Value functions
-struct Value* make_value(int type, long num, double dec);
+struct Value* make_value(int type, long num, double dec, struct Node* expr);
 struct Value* make_long(long num);
 struct Value* make_double(double dec);
 struct Value* make_true();
@@ -57,13 +58,21 @@ struct Value* make_false();
 void delete_value(struct Value* val);
 long get_long(struct Value* val);
 double get_double(struct Value* val);
+struct Node* get_expression(struct Value* val);
 void set_long(struct Value* val, long num);
 void set_double(struct Value* val, double dec);
+void set_expression(struct Value* val, struct Node* node);
 
 // Variable Functions
 struct Variable* make_variable(char* id, struct Value* value);
 void set_value(struct Variable* var, struct Value* value);
 struct Value* get_value(struct Variable* var);
+struct Value* make_long(long num);
+struct Value* make_double(double dec);
+struct Value* make_true();
+struct Value* make_false();
+struct Value* make_boolean(int x);
+struct Value* make_expression(struct Node* expr);
 
 struct Environment {
   int num_vars;

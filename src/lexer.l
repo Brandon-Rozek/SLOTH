@@ -41,10 +41,10 @@ DIGIT [0-9]
 "input"                 {return INPUT;}
 "lambda"                {return LAMBDA;}
 ":"                     {return COLON;}
-"true"                  {yylval.value = make_node(VALUE, make_value(BOOLEAN, 1, 0), ""); return VALUE;}
-"false"                 {yylval.value = make_node(VALUE, make_value(BOOLEAN, 0, 0), ""); return VALUE;}
-{DIGIT}                 {yylval.value = make_node(VALUE, make_value(LONG, atoi(yytext), 0), ""); return VALUE;}
-{DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_value(DOUBLE, 0, atof(yytext)), ""); return VALUE;}
+"true"                  {yylval.value = make_node(VALUE, make_true(), ""); return VALUE;}
+"false"                 {yylval.value = make_node(VALUE, make_false(), ""); return VALUE;}
+{DIGIT}                 {yylval.value = make_node(VALUE, make_long(atoi(yytext)), ""); return VALUE;}
+{DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_double(atof(yytext)), ""); return VALUE;}
 [_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  NULL, strdup(yytext)); return IDENTIFIER;}
 [\n]                    {linenum++;} 
 [ \t\r]+                {}
