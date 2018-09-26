@@ -1,7 +1,8 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "node.h"
+#include "../operations/node.h"
+#include "../variables/value.h"
 #include "parser.tab.h"
 
 /* Keep track of line numbers for error reporting */
