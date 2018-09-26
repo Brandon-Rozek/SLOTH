@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include <assert.h>
 #include "node.h"
 #include "operators.h"
@@ -10,7 +10,7 @@
 #include "../variables/variable.h"
 
 /* creates a new node and returns it */
-struct Node* make_node(int type, struct Value* value, char* id) {
+struct Node* make_node(int type, struct Value* value, std::string id) {
   int i;
 
   /* allocate space */
@@ -19,7 +19,7 @@ struct Node* make_node(int type, struct Value* value, char* id) {
   /* set properties */
   node->type = type;
   node->value = value;
-  strcpy(node->id, id);
+  id.copy(node->id, id.length(), 0);
   node->num_children = 0;
   for(i = 0; i < MAX_CHILDREN; i++) {
     node->children[i] = NULL;
@@ -37,9 +37,9 @@ void attach_node(struct Node* parent, struct Node* child) {
   assert(parent->num_children <= MAX_CHILDREN);
 }
 
-void check_num_nodes(struct Node* node, int num_children, char* error) {
+void check_num_nodes(struct Node* node, int num_children, std::string error) {
   if (node && node->num_children != num_children) {
-    fprintf(stderr, "%s%s%s", "Error, ", error, "\n");
+    std::cerr << "Error, " << error << std::endl;
   }
 }
 

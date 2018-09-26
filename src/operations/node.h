@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <string>
 #include "../variables/value.h"
 #include "../variables/environment.h"
 
@@ -21,7 +22,7 @@ struct Node {
 };
 
 // Abstract Syntax Tree Functions
-struct Node* make_node(int type, struct Value* value, char* id);
+struct Node* make_node(int type, struct Value* value, std::string id);
 void attach_node(struct Node* parent, struct Node* child);
 void print_tree(struct Node* node, int tabs);
 void delete_tree(struct Node* node);
