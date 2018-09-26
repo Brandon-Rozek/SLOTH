@@ -1,6 +1,13 @@
-src/lex.yy.c
-src/parser.tab.c
-src/parser.tab.h
+src/parser/lex.yy.c
+src/parser/parser.tab.c
+src/parser/parser.tab.h
+src/parser/lex.yy.o
+src/parser/parser.tab.o
+src/variables/environment.o
+src/variables/variable.o
+src/variables/value.o
+src/operations/node.o
+src/operations/operators.o
 sloth
 vgcore*
 .vscode
