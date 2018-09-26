@@ -4,6 +4,7 @@
 #include "../operations/node.h"
 #include "../variables/value.h"
 #include "parser.tab.h"
+#include "../string.h"
 
 /* Keep track of line numbers for error reporting */
 int linenum = 0;
@@ -44,6 +45,7 @@ DIGIT [0-9]
 ":"                     {return COLON;}
 "true"                  {yylval.value = make_node(VALUE, make_true(), ""); return VALUE;}
 "false"                 {yylval.value = make_node(VALUE, make_false(), ""); return VALUE;}
+\".*\"                   {yylval.value = make_node(VALUE, make_string(substring(yytext, 1, strlen(yytext) - 1)), ""); return VALUE; }
 {DIGIT}                 {yylval.value = make_node(VALUE, make_long(atoi(yytext)), ""); return VALUE;}
 {DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_double(atof(yytext)), ""); return VALUE;}
 [_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  NULL, strdup(yytext)); return IDENTIFIER;}

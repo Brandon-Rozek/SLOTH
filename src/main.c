@@ -34,7 +34,7 @@ void interpret_file(char* fileName) {
   stdin = orig_stdin;
 
   // Interpret the AST
-  // print_tree(result, 0);
+  // print_tree(result, 0); // For debugging
   struct Environment* env = create_environment();
   eval_statement(result, env);
   delete_environment(env);

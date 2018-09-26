@@ -80,17 +80,9 @@ void print_tree(struct Node* node, int tabs) {
     case CALLFUNC: printf("FUNCTIONCALL:\n"); break;
     case STATEMENT: printf("STATEMENT:\n"); break;
     case VALUE: 
-      if (node->value->type == BOOLEAN) {
-        if (get_long(node->value)) {
-          printf("VALUE: true\n");
-        } else {
-          printf("VALUE: false\n");
-        }
-      } else if (node->value->type == LONG) {
-        printf("VALUE: %li\n", get_long(node->value));
-      } else { // Assume double
-        printf("VALUE: %lf\n", get_double(node->value));
-      }
+      printf("VALUE: ");
+      print_value(node->value);
+      printf("\n");
      break;
     default:
       printf("Error, %d not a valid node type.\n", node->type);
@@ -311,19 +303,8 @@ void eval_statement(struct Node* node, struct Environment* env) {
     case PRINT:
       check_num_nodes(node, 1, "can only print out one expression at a time.");
       tempVal = eval_expression(node->children[0], env);
-      if (tempVal->type == BOOLEAN) { 
-        if (get_long(tempVal)) {
-          printf("true\n");
-        } else {
-          printf("false\n");
-        }
-      } else if (tempVal->type == LONG) {
-        printf("%li\n", get_long(tempVal));
-      } else if (tempVal ->type == DOUBLE) {
-        printf("%lf\n", get_double(tempVal));
-      } else { // Assume lambda expression
-        printf("<LambdaExpression>\n");
-      }
+      print_value(tempVal);
+      printf("\n");
       break;
     //------------
     case STATEMENT: // Can have a maximum of two children statement nodes

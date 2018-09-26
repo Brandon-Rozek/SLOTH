@@ -9,6 +9,7 @@ src/variables/value.o
 src/operations/node.o
 src/operations/operators.o
 src/shell.o
+src/string.o
 sloth
 vgcore*
 .vscode
