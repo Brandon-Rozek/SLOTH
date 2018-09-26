@@ -6,7 +6,7 @@
 /* creates a new variable and returns it */
 struct Variable* make_variable(char* id, struct Value* value) {
   /* allocate space */
-  struct Variable* var = malloc(sizeof(struct Variable));
+  struct Variable* var = (struct Variable*) malloc(sizeof(struct Variable));
 
   /* set properties */
   strcpy(var->id, id);

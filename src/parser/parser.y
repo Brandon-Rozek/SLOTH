@@ -44,7 +44,7 @@
 %token COMMENT            
 %token WHITESPACE   
 %token DONE
-%token <value> LAMBDA
+%token <value> LAMBDATAG
 %token COLON
 
 /* declare non-terminals */
@@ -101,9 +101,9 @@ statements: BEGINTOK substatements END { $$ = $2; }
 substatements: statement substatements {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); attach_node($$, $2); }
               | statement  {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); }
 
-exprlambda: LAMBDA ident COLON expression { 
+exprlambda: LAMBDATAG ident COLON expression { 
               // Only supports one argument functions for now
-              $$ = make_node(LAMBDA, NULL, "");
+              $$ = make_node(LAMBDATAG, NULL, "");
               attach_node($$, $2);
               attach_node($$, $4); }
         | expression { $$ = $1; }

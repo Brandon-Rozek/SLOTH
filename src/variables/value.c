@@ -6,7 +6,7 @@
 
 struct Value* make_value(int type, long num, double dec, struct Node* expr, char* str) {
     /* allocate space */
-  struct Value* val = malloc(sizeof(struct Value));
+  struct Value* val = (struct Value*) malloc(sizeof(struct Value));
 
   /* set properties */
   val->type = type;

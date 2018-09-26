@@ -1,7 +1,7 @@
 #ifndef VALUE_H
 #define VALUE_H
 
-enum TypeTag { DOUBLE, LONG, BOOLEAN, STRING };
+enum TypeTag { DOUBLE, LONG, BOOLEAN, STRING, LAMBDA };
 
 typedef union typeval {
         long num;
