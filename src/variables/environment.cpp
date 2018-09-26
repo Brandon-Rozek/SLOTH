@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include "environment.hpp"
 #include "variable.hpp"
 
@@ -13,9 +13,9 @@ struct Environment* create_environment(void) {
   return env;
 }
 
-struct Variable* find_variable(struct Environment* env, char* id) {
+struct Variable* find_variable(struct Environment* env, std::string id) {
   for (int i = 0; i < env->num_vars; i++) {
-    if (strcmp(env->vars[i]->id, id) == 0) {
+    if (id.compare(env->vars[i]->id) == 0) {
       return env->vars[i];
     }
   }
@@ -24,7 +24,7 @@ struct Variable* find_variable(struct Environment* env, char* id) {
 
 void add_variable(struct Environment* env, struct Variable* var) {
   if (env->num_vars >= MAX_VARIABLES) {
-    fprintf(stderr, "Error: Maximum number of variables reached.\n");
+    std::cerr << "Error: Maximum number of variables reached." << std::endl;
     return;
   }
 

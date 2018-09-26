@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string>
 #include "variable.hpp"
 
 /* creates a new variable and returns it */
-struct Variable* make_variable(char* id, struct Value* value) {
+struct Variable* make_variable(std::string id, struct Value* value) {
   /* allocate space */
   struct Variable* var = new Variable();
 
   /* set properties */
-  strcpy(var->id, id);
+  var->id = id;
   var->value = value;
 
   /* return new variable */
