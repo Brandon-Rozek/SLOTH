@@ -122,15 +122,14 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   // Evaluate subexpressions if existent and node is not a lambda expression
   struct Value* val1 = NULL;
   struct Value* val2 = NULL;
-  struct Value* val3 = NULL;
+  // struct Value* val3 = NULL;
   if (node->num_children > 0 && node->type != LAMBDA) {
     val1 = eval_expression(node->children[0], env);
     if (node->num_children > 1) {
       val2 = eval_expression(node->children[1], env);
-      if (node->num_children > 2) {
-        val3 = eval_expression(node->children[2], env);
-        // delete_value(val3); // No code below uses val3 for now...
-      }
+      // if (node->num_children > 2) {
+        // val3 = eval_expression(node->children[2], env);
+      // }
     }
   }
 
