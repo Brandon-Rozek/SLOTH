@@ -14,7 +14,7 @@ struct Node* make_node(int type, struct Value* value, std::string id) {
   int i;
 
   /* allocate space */
-  struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+  struct Node* node = new Node();
 
   /* set properties */
   node->type = type;

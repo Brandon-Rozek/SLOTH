@@ -1,12 +1,13 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include "value.h"
+#include <string>
+#include <iostream>
 #include "../parser/parser.tab.h"
 
 
-struct Value* make_value(TypeTag type, long num, double dec, struct Node* expr, char* str) {
+struct Value* make_value(TypeTag type, long num, double dec, struct Node* expr, std::string str) {
     /* allocate space */
-  struct Value* val = (struct Value*) malloc(sizeof(struct Value));
+  struct Value* val = new Value();
 
   /* set properties */
   val->type = type;
@@ -25,24 +26,24 @@ struct Value* make_value(TypeTag type, long num, double dec, struct Node* expr, 
 }
 
 struct Value* make_long(long num) {
-  return make_value(LONG, num, 0, NULL, NULL);
+  return make_value(LONG, num, 0, NULL, "");
 }
 struct Value* make_double(double dec) {
-  return make_value(DOUBLE, 0, dec, NULL, NULL);
+  return make_value(DOUBLE, 0, dec, NULL, "");
 }
 struct Value* make_true() {
-  return make_value(BOOLEAN, 1, 0, NULL, NULL);
+  return make_value(BOOLEAN, 1, 0, NULL, "");
 }
 struct Value* make_false() {
-  return make_value(BOOLEAN, 0, 0, NULL, NULL);
+  return make_value(BOOLEAN, 0, 0, NULL, "");
 }
 struct Value* make_boolean(int x) {
   return (x)? make_true() : make_false();
 }
 struct Value* make_expression(struct Node* expr) {
-  return make_value(LAMBDA, 0, 0, expr, NULL);
+  return make_value(LAMBDA, 0, 0, expr, "");
 }
-struct Value* make_string(char* str) {
+struct Value* make_string(std::string str) {
   return make_value(STRING, 0, 0, NULL, str);
 }
 
@@ -59,7 +60,7 @@ double get_double(struct Value* val) {
 struct Node* get_expression(struct Value* val) {
   return val->value.expr;
 }
-char* get_string(struct Value* val) {
+std::string get_string(struct Value* val) {
   return val->value.str;
 }
 
@@ -75,7 +76,7 @@ void set_expression(struct Value* val, struct Node* expr) {
   val->type = LAMBDA;
   val->value.expr = expr;
 }
-void set_sring(struct Value* val, char* str) {
+void set_sring(struct Value* val, std::string str) {
   val->type = STRING;
   val->value.str = str;
 }
@@ -83,17 +84,17 @@ void set_sring(struct Value* val, char* str) {
 void print_value(struct Value* val) {
   if (val->type == BOOLEAN) {
     if (get_long(val)) {
-      printf("true");
+      std::cout << "true";
     } else {
-      printf("false");
+      std::cout << "false";
     }
   } else if (val->type == LONG) {
-    printf("%li", get_long(val));
+    std::cout << get_long(val);
   } else if (val->type == STRING) {
-    printf("%s", get_string(val));
+    std::cout << get_string(val);
   } else if (val->type == DOUBLE) {
-    printf("%lf", get_double(val));
+    std::cout << get_double(val);
   } else { // Assume lambda expression
-    printf("<LambdaExpression>");
+    std::cout << "<LambdaExpression>";
   }
 }

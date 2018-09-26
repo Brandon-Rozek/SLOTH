@@ -5,7 +5,7 @@
 #include "variable.h"
 
 struct Environment* create_environment(void) {
-  struct Environment* env = (struct Environment*) malloc(sizeof(struct Environment));
+  struct Environment* env = new Environment();
   env->num_vars = 0;
   for(int i = 0; i < MAX_VARIABLES; i++) {
     env->vars[i] = NULL;

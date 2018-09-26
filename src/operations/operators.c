@@ -21,7 +21,7 @@ struct Value* add(struct Value* x, struct Value* y) {
   } else if (x->type == DOUBLE && y->type == LONG) {
     ans = make_double(get_double(x) + get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_string(strcat(get_string(x), get_string(y)));  
+    ans = make_string(get_string(x) + get_string(y));  
   } else { // Both are DOUBLE
     ans = make_double(get_double(x) + get_double(y));
   }
@@ -109,7 +109,7 @@ struct Value* less(struct Value* x, struct Value* y) {
   } else if (x->type == DOUBLE && y->type == LONG) {
     ans = make_boolean(get_double(x) < get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) < 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) < 0);
   } else { // Both are DOUBLE
     ans = make_boolean(get_double(x) < get_double(y));
   }
@@ -134,7 +134,7 @@ struct Value* greater(struct Value* x, struct Value* y) {
   } else if (x->type == DOUBLE && y->type == LONG) {
     ans = make_boolean(get_double(x) > get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) > 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) > 0);
   } else { // Both are DOUBLE
     ans = make_boolean(get_double(x) > get_double(y));
   }
@@ -159,7 +159,7 @@ struct Value* less_equal(struct Value* x, struct Value* y) {
   } else if (x->type == DOUBLE && y->type == LONG) {
     ans = make_boolean(get_double(x) <= get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) <= 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) <= 0);
   } else { // Both are DOUBLE
     ans = make_boolean(get_double(x) <= get_double(y));
   }
@@ -184,7 +184,7 @@ struct Value* greater_equal(struct Value* x, struct Value* y) {
   } else if (x->type == DOUBLE && y->type == LONG) {
     ans = make_boolean(get_double(x) >= get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) >= 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) >= 0);
   } else { // Both are DOUBLE
     ans = make_boolean(get_double(x) >= get_double(y));
   }
@@ -212,7 +212,7 @@ struct Value* equals(struct Value* x, struct Value* y) {
   } else if (x->type == BOOLEAN && y->type == BOOLEAN) {
     ans = make_boolean(get_long(x) == get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) == 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) == 0);
   } else { // Type is a mix between boolean and another type
     fprintf(stderr, "Error, cannot compare a boolean with another type.\n");
   }
@@ -240,7 +240,7 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
   } else if (x->type == BOOLEAN && y->type == BOOLEAN) {
     ans = make_boolean(get_long(x) != get_long(y));
   } else if (x->type == STRING && y->type == STRING) {
-    ans = make_boolean(strcmp(get_string(x), get_string(y)) != 0);
+    ans = make_boolean(get_string(x).compare(get_string(y)) != 0);
   } else { // Type is a mix between boolean and another type
     fprintf(stderr, "Error, cannot compare a boolean with another type.\n");
   }
