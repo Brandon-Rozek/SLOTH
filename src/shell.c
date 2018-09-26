@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "shell.h"
+#include "parser/parser.h"
 #include "variables/environment.h"
 #include "operations/node.h"
+#include "constants.h"
 
 
 // For keeping track of command history
@@ -23,9 +25,6 @@ void add_history(char* unused) {}
 #else // Otherwise we'll just use the handy readline library
 #include <editline/readline.h>
 #endif
-
-
-struct Node* result;
 
 FILE* stringToFile(char* str) { // Creates a temporary file with the given string as its contents
     int i = 0; 

@@ -248,7 +248,7 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* and(struct Value* x, struct Value* y) {
+struct Value* and_value(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in &&.\n"); }
   if (x->type != BOOLEAN || y->type != BOOLEAN) { fprintf(stderr, "Error, cannot use and AND operation with a non-boolean.\n"); }
   if (x->type == STRING || y->type == STRING) { fprintf(stderr, "Error, cannot AND a string.\n"); }
@@ -256,7 +256,7 @@ struct Value* and(struct Value* x, struct Value* y) {
   return make_boolean(get_long(x) && get_long(y));
 }
 
-struct Value* or(struct Value* x, struct Value* y) {
+struct Value* or_value(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in ||.\n"); }
   if (x->type != BOOLEAN || y->type != BOOLEAN) { fprintf(stderr, "Error, cannot use and OR operation with a non-boolean.\n"); }
   if (x->type == STRING || y->type == STRING) { fprintf(stderr, "Error, cannot OR a string.\n"); }
@@ -264,7 +264,7 @@ struct Value* or(struct Value* x, struct Value* y) {
   return make_boolean(get_long(x) || get_long(y));
 }
 
-struct Value* not(struct Value* x) {
+struct Value* not_value(struct Value* x) {
   if (!x) { fprintf(stderr, "Error, uninitialized values being used in !.\n"); }
   if (x->type != BOOLEAN) { fprintf(stderr, "Error, cannot NOT a non-boolean.\n"); }
   if (x->type == STRING) { fprintf(stderr, "Error, cannot negate a string.\n"); }

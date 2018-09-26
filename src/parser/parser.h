@@ -4,5 +4,6 @@
 int yywrap( );
 int yylex( );
 void yyerror(const char* str);
+int yyparse (void);
 
 #endif

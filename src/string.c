@@ -11,7 +11,7 @@ char* substring(char* str, int start, int end) {
   char* substr;
   int c;
   int length = end - start;
-  substr = malloc(length + 1);
+  substr = (char*) malloc(length + 1);
  
   if (substr == NULL) {
     fprintf(stderr, "Unable to allocate memory for substring.\n");

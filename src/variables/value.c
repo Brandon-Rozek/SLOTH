@@ -4,7 +4,7 @@
 #include "../parser/parser.tab.h"
 
 
-struct Value* make_value(int type, long num, double dec, struct Node* expr, char* str) {
+struct Value* make_value(TypeTag type, long num, double dec, struct Node* expr, char* str) {
     /* allocate space */
   struct Value* val = (struct Value*) malloc(sizeof(struct Value));
 

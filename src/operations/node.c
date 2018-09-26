@@ -210,19 +210,19 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
     //----------
     case AND:
       check_num_nodes(node, 2, "cannot perform logical operators on more than two expressions.");
-      return and(val1, val2);
+      return and_value(val1, val2);
       // return val1 && val2;
       break;
     //----------
     case OR:
       check_num_nodes(node, 2, "cannot perform logical operators on more than two expressions.");
-      return or(val1, val2);
+      return or_value(val1, val2);
       // return val1 || val2;
       break;
     //----------
     case NOT:
       check_num_nodes(node, 1, "cannot negate more than one expressions.");
-      return not(val1);
+      return not_value(val1);
       // return !val1;
       break;
     //----------
