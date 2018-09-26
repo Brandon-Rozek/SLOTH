@@ -1,4 +1,4 @@
-GPP = g++ -Wall
+GPP = g++ -Wall -std=c++17
 
 sloth: src/main.c src/parser/lex.yy.o src/parser/parser.tab.o src/variables/environment.o src/variables/variable.o src/variables/value.o src/operations/node.o src/operations/operators.o src/string.o src/shell.o
 	$(GPP) src/main.c src/parser/lex.yy.o src/parser/parser.tab.o src/variables/environment.o src/variables/variable.o src/variables/value.o src/operations/node.o src/operations/operators.o src/string.o src/shell.o -ledit -o sloth
