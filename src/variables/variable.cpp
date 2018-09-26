@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "variable.h"
+#include "variable.hpp"
 
 /* creates a new variable and returns it */
 struct Variable* make_variable(char* id, struct Value* value) {

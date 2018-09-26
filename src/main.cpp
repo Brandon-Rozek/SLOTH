@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "sloth.h"
-#include "shell.h"
+#include "sloth.hpp"
+#include "shell.hpp"
 
 void interpret_file(char* fileName);
 

@@ -1,8 +1,8 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "../operations/node.h"
-#include "../variables/value.h"
+#include "../operations/node.hpp"
+#include "../variables/value.hpp"
 #include "parser.tab.h"
 #include "../string.h"
 

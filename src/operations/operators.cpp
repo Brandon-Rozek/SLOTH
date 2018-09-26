@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "operators.h"
-#include "../variables/value.h"
+#include "operators.hpp"
+#include "../variables/value.hpp"
 
 struct Value* add(struct Value* x, struct Value* y) {
   if (!x || !y) { fprintf(stderr, "Error, uninitialized values being used in add.\n"); }

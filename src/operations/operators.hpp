@@ -1,6 +1,6 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
-#include "../variables/value.h"
+#include "../variables/value.hpp"
 
 struct Value* add(struct Value* x, struct Value* y);
 struct Value* subtract(struct Value* x, struct Value* y);

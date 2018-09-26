@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "shell.h"
-#include "parser/parser.h"
-#include "variables/environment.h"
-#include "operations/node.h"
-#include "constants.h"
+#include "shell.hpp"
+#include "parser/parser.hpp"
+#include "variables/environment.hpp"
+#include "operations/node.hpp"
+#include "constants.hpp"
 
 
 // For keeping track of command history

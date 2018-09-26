@@ -2,8 +2,8 @@
 #define NODE_H
 
 #include <string>
-#include "../variables/value.h"
-#include "../variables/environment.h"
+#include "../variables/value.hpp"
+#include "../variables/environment.hpp"
 
 #define ID_SIZE 100
 #define MAX_CHILDREN 3

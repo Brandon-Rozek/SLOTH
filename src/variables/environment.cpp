@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "environment.h"
-#include "variable.h"
+#include "environment.hpp"
+#include "variable.hpp"
 
 struct Environment* create_environment(void) {
   struct Environment* env = new Environment();

@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string>
 #include <assert.h>
-#include "node.h"
-#include "operators.h"
-#include "../constants.h"
+#include "node.hpp"
+#include "operators.hpp"
+#include "../constants.hpp"
 #include "../parser/parser.tab.h"
-#include "../variables/value.h"
-#include "../variables/variable.h"
+#include "../variables/value.hpp"
+#include "../variables/variable.hpp"
 
 /* creates a new node and returns it */
 struct Node* make_node(int type, struct Value* value, std::string id) {

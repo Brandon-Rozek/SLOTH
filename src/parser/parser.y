@@ -1,9 +1,9 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "parser.h"
-#include "../operations/node.h"
-#include "../constants.h"
+#include "parser.hpp"
+#include "../operations/node.hpp"
+#include "../constants.hpp"
 
 %}
 

@@ -1,7 +1,7 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include "../operations/node.h"
+#include "../operations/node.hpp"
 
 struct Variable {
   char id[ID_SIZE];
