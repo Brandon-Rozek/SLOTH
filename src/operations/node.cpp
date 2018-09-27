@@ -1,7 +1,5 @@
 #include <iostream>
-#include <stdlib.h>
 #include <string>
-#include <assert.h>
 #include "node.hpp"
 #include "operators.hpp"
 #include "../constants.hpp"
@@ -22,7 +20,7 @@ struct Node* make_node(int type, struct Value* value, std::string id) {
   id.copy(node->id, id.length(), 0);
   node->num_children = 0;
   for(i = 0; i < MAX_CHILDREN; i++) {
-    node->children[i] = NULL;
+    node->children[i] = nullptr;
   }
 
   /* return new node */
@@ -34,7 +32,7 @@ void attach_node(struct Node* parent, struct Node* child) {
   /* connect it */
   parent->children[parent->num_children] = child;
   parent->num_children++;
-  assert(parent->num_children <= MAX_CHILDREN);
+  if (parent->num_children > MAX_CHILDREN) { std::cerr << "Error, max children attached to a node" << std::endl; }
 }
 
 void check_num_nodes(struct Node* node, int num_children, std::string error) {
@@ -114,15 +112,15 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
 
   // Needed if we are going to take input from the user
   double temp;
-  struct Variable* var = NULL;
-  struct Environment* local_env = NULL;
-  struct Node* tempNode = NULL;
-  struct Value* tempVal = NULL;
+  struct Variable* var = nullptr;
+  struct Environment* local_env = nullptr;
+  struct Node* tempNode = nullptr;
+  struct Value* tempVal = nullptr;
 
   // Evaluate subexpressions if existent and node is not a lambda expression
-  struct Value* val1 = NULL;
-  struct Value* val2 = NULL;
-  // struct Value* val3 = NULL;
+  struct Value* val1 = nullptr;
+  struct Value* val2 = nullptr;
+  // struct Value* val3 = nullptr;
   if (node->num_children > 0 && node->type != LAMBDA) {
     val1 = eval_expression(node->children[0], env);
     if (node->num_children > 1) {
@@ -233,7 +231,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
     //----------
     case IDENTIFIER:
       var = find_variable(env, node->id);
-      if (var == NULL) {
+      if (var == nullptr) {
         fprintf(stderr, "Error: Symbol %s not found.\n", node->id);
         return 0;
       }

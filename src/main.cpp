@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include "sloth.hpp"
 #include "shell.hpp"
@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
   } else if (argc == 2) {
     interpret_file(argv[1]);
   } else {
-    printf("Incorrect number of arguments passed. Expected %d or %d, got %d.\n", 0, 1, argc - 1);
-    printf("Usage: lexer [program_name].sl\n");
+    std::cout << "Incorrect number of arguments passed. Expected " << 0 << " or " << 1 << ", got " << argc - 1 << std::endl; 
+    std::cout << "Usage: sloth [program_name]" << std::endl;
     exit(-1);
   }
 

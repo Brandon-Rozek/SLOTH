@@ -30,9 +30,9 @@ FILE* stringToFile(char* str) { // Creates a temporary file with the given strin
     int i = 0; 
   
     FILE* tmp = tmpfile(); 
-    if (tmp == NULL) { 
+    if (tmp == nullptr) { 
         fprintf(stderr, "Unable to create temp file"); 
-        return NULL; 
+        return nullptr; 
     } 
   
     while (str[i] != '\0') { 

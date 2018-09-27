@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdlib.h>
 #include <string>
 #include "environment.hpp"
 #include "variable.hpp"
@@ -8,7 +7,7 @@ struct Environment* create_environment(void) {
   struct Environment* env = new Environment();
   env->num_vars = 0;
   for(int i = 0; i < MAX_VARIABLES; i++) {
-    env->vars[i] = NULL;
+    env->vars[i] = nullptr;
   }
   return env;
 }
@@ -19,7 +18,7 @@ struct Variable* find_variable(struct Environment* env, std::string id) {
       return env->vars[i];
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void add_variable(struct Environment* env, struct Variable* var) {
@@ -30,7 +29,7 @@ void add_variable(struct Environment* env, struct Variable* var) {
 
   // If variable exists, replace it
   struct Variable* temp_var = find_variable(env, var->id);
-  if (temp_var != NULL) {
+  if (temp_var != nullptr) {
     temp_var->value = var->value;
     free(var);
     return;
