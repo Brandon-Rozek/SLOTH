@@ -17,19 +17,21 @@ struct Node {
   std::string id;
 
   /* at most three children nodes */
-  int num_children;
+  uint num_children;
   std::array<struct Node*, MAX_CHILDREN> children;
 
   Node(int t, struct Value* v, std::string s) {
     type = t;
     value = v;
     id = s;
-    for (int i = 0; i < MAX_CHILDREN; i++) {
+    for (uint i = 0; i < MAX_CHILDREN; i++) {
       children[i] = nullptr;
     }
   }
   ~Node() {
-    for (int i = 0; i < num_children; i++) {
+    if (value) { delete value; }
+    // delete value;
+    for (uint i = 0; i < num_children; i++) {
       delete children[i];
     }
   }

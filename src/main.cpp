@@ -38,6 +38,7 @@ void interpret_file(char* fileName) {
   struct Environment* env = new Environment();
   eval_statement(result, env);
   delete_environment(env);
-  
+  // delete env;
+
   delete result;
 }

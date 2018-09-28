@@ -1,12 +1,18 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#include "variable.hpp"
 #include <string>
 #include <vector>
 
 struct Environment {
   std::vector<struct Variable*> vars;
   Environment() {  }
+  // ~Environment() { 
+  //   for (uint i = 0; i < size(vars); i++) {
+  //       delete vars[i];
+  //   }
+  // }
 };
 
 // Variable Lookup Functions

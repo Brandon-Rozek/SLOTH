@@ -15,14 +15,14 @@ void attach_node(struct Node* parent, struct Node* child) {
   if (parent->num_children > MAX_CHILDREN) { std::cerr << "Error, max children attached to a node" << std::endl; }
 }
 
-void check_num_nodes(struct Node* node, int num_children, std::string error) {
+void check_num_nodes(struct Node* node, uint num_children, std::string error) {
   if (node && node->num_children != num_children) {
     std::cerr << "Error, " << error << std::endl;
   }
 }
 
-void print_tree(struct Node* node, int tabs) {
-  int i;
+void print_tree(struct Node* node, uint tabs) {
+  uint i;
   /* base case */
   if(!node) {
     std::cerr << "NO TREE STRUCTURE" << std::endl;
@@ -113,6 +113,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
           eval_expression(node->children[1], env)));
       tempVal =  eval_expression(tempNode->children[1], local_env);
       delete_environment(local_env);
+      // delete local_env;
       return tempVal;
       break;
     case PLUS:
