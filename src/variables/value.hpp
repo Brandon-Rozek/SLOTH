@@ -10,19 +10,30 @@ union TypeVal {
   double dec;
   struct Node* expr;
   std::string str;
-  TypeVal() {} 
-  // TypeVal(const std::string& s) : str(s) {} // Construct Point object using initializer list.
-  // TypeVal& operator=(const std::string& s) { new(&str) std::string(s); return *this; } // Assign Point object using placement 'new'.
-  ~TypeVal() {}
+  TypeVal() { new(&str) std::string(); new(expr) struct Node*; } 
+  ~TypeVal() { free(&str); free(expr); }
 };
 
 struct Value {
   enum TypeTag type;
   TypeVal value;
+  // Broken implemenation of constructor below
+  Value(TypeTag t, long n, double d, struct Node* e, std::string s) {
+    /* set properties */
+    type = t;
+    if (type == LONG || type == BOOLEAN) {
+      value.num = n;
+    } else if (type == DOUBLE){ // Assume DOUBLE
+      value.dec = d;
+    } else if (type == STRING) {
+      value.str = s;  
+    } else { // Assume lambda expression
+      value.expr = e;
+    }
+  }
 };
 
 // Constructors
-struct Value* make_value(int type, long num, double dec, struct Node* expr, std::string str);
 struct Value* make_long(long num);
 struct Value* make_double(double dec);
 struct Value* make_true();

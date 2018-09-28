@@ -4,47 +4,26 @@
 #include <iostream>
 #include "../parser/parser.tab.h"
 
-
-struct Value* make_value(TypeTag type, long num, double dec, struct Node* expr, std::string str) {
-    /* allocate space */
-  struct Value* val = new Value();
-
-  /* set properties */
-  val->type = type;
-  if (type == LONG || type == BOOLEAN) {
-    val->value.num = num;
-  } else if (type == DOUBLE){ // Assume DOUBLE
-    val->value.dec = dec;
-  } else if (type == STRING) {
-    val->value.str = str;  
-  } else { // Assume lambda expression
-    val->value.expr = expr;
-  }
-
-  /* return new variable */
-  return val;
-}
-
 struct Value* make_long(long num) {
-  return make_value(LONG, num, 0, nullptr, "");
+  return new Value(LONG, num, 0, nullptr, "");
 }
 struct Value* make_double(double dec) {
-  return make_value(DOUBLE, 0, dec, nullptr, "");
+  return new Value(DOUBLE, 0, dec, nullptr, "");
 }
 struct Value* make_true() {
-  return make_value(BOOLEAN, 1, 0, nullptr, "");
+  return new Value(BOOLEAN, 1, 0, nullptr, "");
 }
 struct Value* make_false() {
-  return make_value(BOOLEAN, 0, 0, nullptr, "");
+  return new Value(BOOLEAN, 0, 0, nullptr, "");
 }
 struct Value* make_boolean(int x) {
   return (x)? make_true() : make_false();
 }
 struct Value* make_expression(struct Node* expr) {
-  return make_value(LAMBDA, 0, 0, expr, "");
+  return new Value(LAMBDA, 0, 0, expr, "");
 }
 struct Value* make_string(std::string str) {
-  return make_value(STRING, 0, 0, nullptr, str);
+  return new Value(STRING, 0, 0, nullptr, str);
 }
 
 void delete_value(struct Value* val) {
