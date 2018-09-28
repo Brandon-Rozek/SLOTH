@@ -2,11 +2,10 @@
 #define ENVIRONMENT_H
 
 #include <string>
-#define MAX_VARIABLES 200
+#include <vector>
 
 struct Environment {
-  int num_vars;
-  struct Variable* vars[MAX_VARIABLES];
+  std::vector<struct Variable*> vars;
 };
 
 // Variable Lookup Functions
