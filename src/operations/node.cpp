@@ -73,15 +73,6 @@ void print_tree(struct Node* node, int tabs) {
   }
 }
 
-void delete_tree(struct Node* node) {
-  if (!node) { return; }
-  for(int i = 0; i < node->num_children; i++) {
-    delete_tree(node->children[i]);
-  }
-  free(node);
-}
-
-
 
 struct Value* eval_expression(struct Node* node, struct Environment* env) {
   /* base case */

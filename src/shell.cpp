@@ -70,5 +70,5 @@ void start_shell() {
     }
 
     delete_environment(env);
-    delete_tree(result);
+    delete result;
 }

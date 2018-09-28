@@ -28,13 +28,17 @@ struct Node {
       children[i] = nullptr;
     }
   }
+  ~Node() {
+    for (int i = 0; i < num_children; i++) {
+      delete children[i];
+    }
+  }
 };
 
 // Abstract Syntax Tree Functions
 // struct Node* make_node(int type, struct Value* value, std::string id);
 void attach_node(struct Node* parent, struct Node* child);
 void print_tree(struct Node* node, int tabs);
-void delete_tree(struct Node* node);
 
 // Interpreting AST
 void eval_statement(struct Node* node, struct Environment* env);
