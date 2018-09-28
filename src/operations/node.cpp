@@ -7,26 +7,6 @@
 #include "../variables/value.hpp"
 #include "../variables/variable.hpp"
 
-/* creates a new node and returns it */
-struct Node* make_node(int type, struct Value* value, std::string id) {
-  int i;
-
-  /* allocate space */
-  struct Node* node = new Node();
-
-  /* set properties */
-  node->type = type;
-  node->value = value;
-  id.copy(node->id, id.length(), 0);
-  node->num_children = 0;
-  for(i = 0; i < MAX_CHILDREN; i++) {
-    node->children[i] = nullptr;
-  }
-
-  /* return new node */
-  return node;
-}
-
 /* attach an existing node onto a parent */
 void attach_node(struct Node* parent, struct Node* child) {
   /* connect it */

@@ -65,32 +65,32 @@ statement: assignment { $$ = $1; }
          | statements { $$ = $1; } 
 
 assignment: ident ASSIGN exprlambda SEMICOLON {
-    $$ = make_node(ASSIGN, NULL, "");
+    $$ = new Node(ASSIGN, NULL, "");
     attach_node($$, $1);
     attach_node($$, $3);
 }
 
 if-statement: IF expression THEN statement {
-    $$ = make_node(IF, NULL, "");
+    $$ = new Node(IF, NULL, "");
     attach_node($$, $2);
     attach_node($$, $4);
 }
 
 if-else-statement: IF expression THEN statement ELSE statement {
-    $$ = make_node(IF, NULL, "");
+    $$ = new Node(IF, NULL, "");
     attach_node($$, $2);
     attach_node($$, $4);
     attach_node($$, $6);
 }
 
 while: WHILE expression DO statement {
-    $$ = make_node(WHILE, NULL, "");
+    $$ = new Node(WHILE, NULL, "");
     attach_node($$, $2);
     attach_node($$, $4);
 }
 
 print: PRINT exprlambda SEMICOLON {
-    $$ = make_node(PRINT, NULL, "");
+    $$ = new Node(PRINT, NULL, "");
     attach_node($$, $2);
 }
 
@@ -98,41 +98,41 @@ print: PRINT exprlambda SEMICOLON {
 statements: BEGINTOK substatements END { $$ = $2; }
           | BEGINTOK END {}
 
-substatements: statement substatements {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); attach_node($$, $2); }
-              | statement  {$$ = make_node(STATEMENT, NULL, ""); attach_node($$, $1); }
+substatements: statement substatements {$$ = new Node(STATEMENT, NULL, ""); attach_node($$, $1); attach_node($$, $2); }
+              | statement  {$$ = new Node(STATEMENT, NULL, ""); attach_node($$, $1); }
 
 exprlambda: LAMBDATAG ident COLON expression { 
               // Only supports one argument functions for now
-              $$ = make_node(LAMBDATAG, NULL, "");
+              $$ = new Node(LAMBDATAG, NULL, "");
               attach_node($$, $2);
               attach_node($$, $4); }
         | expression { $$ = $1; }
 
-expression: expression OR subexpression { $$ = make_node(OR, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | expression AND subexpression { $$ = make_node(AND, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+expression: expression OR subexpression { $$ = new Node(OR, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | expression AND subexpression { $$ = new Node(AND, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
      | subexpression { $$ = $1; }
 
-subexpression: subexpression LESS term { $$ = make_node(LESS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | subexpression LESSEQ term { $$ = make_node(LESSEQ, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | subexpression GREATER term { $$ = make_node(GREATER, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | subexpression GREATEREQ term { $$ = make_node(GREATEREQ, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | subexpression EQUALS term { $$ = make_node(EQUALS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | subexpression NEQUALS term { $$ = make_node(NEQUALS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+subexpression: subexpression LESS term { $$ = new Node(LESS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | subexpression LESSEQ term { $$ = new Node(LESSEQ, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | subexpression GREATER term { $$ = new Node(GREATER, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | subexpression GREATEREQ term { $$ = new Node(GREATEREQ, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | subexpression EQUALS term { $$ = new Node(EQUALS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | subexpression NEQUALS term { $$ = new Node(NEQUALS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
      | term { $$ = $1; }
 
-term : term PLUS subterm { $$ = make_node(PLUS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-     | term MINUS subterm { $$ = make_node(MINUS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+term : term PLUS subterm { $$ = new Node(PLUS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+     | term MINUS subterm { $$ = new Node(MINUS, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
      | subterm { $$ = $1; }
 
-subterm: subterm TIMES factor { $$ = make_node(TIMES, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
-       | subterm DIVIDE factor { $$ = make_node(DIVIDE, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+subterm: subterm TIMES factor { $$ = new Node(TIMES, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
+       | subterm DIVIDE factor { $$ = new Node(DIVIDE, NULL, ""); attach_node($$, $1); attach_node($$, $3);}
        | factor { $$ = $1; }
 
-factor : MINUS factor { $$ = make_node(MINUS, NULL, ""); attach_node($$, $2); }
-       | NOT factor { $$ = make_node(NOT, NULL, ""); attach_node($$, $2); }
+factor : MINUS factor { $$ = new Node(MINUS, NULL, ""); attach_node($$, $2); }
+       | NOT factor { $$ = new Node(NOT, NULL, ""); attach_node($$, $2); }
        | atom { $$ = $1; }
 
-callfunc: ident OPENPAREM expression ENDPAREM { $$ = make_node(CALLFUNC, NULL, ""); attach_node($$, $1); attach_node($$, $3); }
+callfunc: ident OPENPAREM expression ENDPAREM { $$ = new Node(CALLFUNC, NULL, ""); attach_node($$, $1); attach_node($$, $3); }
 
 atom: OPENPAREM expression ENDPAREM { $$ = $2; }
     | callfunc { $$ = $1; }
@@ -142,7 +142,7 @@ ident: IDENTIFIER { $$ = $1; }
 
 identvalue: ident { $$ = $1; }
           | VALUE { $$ = $1; }
-          | INPUT { $$ = make_node(INPUT, NULL , ""); }
+          | INPUT { $$ = new Node(INPUT, NULL , ""); }
 
 
 

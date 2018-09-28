@@ -43,12 +43,12 @@ DIGIT [0-9]
 "input"                 {return INPUT;}
 "lambda"                {return LAMBDA;}
 ":"                     {return COLON;}
-"true"                  {yylval.value = make_node(VALUE, make_true(), ""); return VALUE;}
-"false"                 {yylval.value = make_node(VALUE, make_false(), ""); return VALUE;}
-\".*\"                   {yylval.value = make_node(VALUE, make_string(substring(yytext, 1, strlen(yytext) - 1)), ""); return VALUE; }
-{DIGIT}                 {yylval.value = make_node(VALUE, make_long(atoi(yytext)), ""); return VALUE;}
-{DIGIT}*"."?{DIGIT}+    {yylval.value = make_node(VALUE, make_double(atof(yytext)), ""); return VALUE;}
-[_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = make_node(IDENTIFIER,  nullptr, strdup(yytext)); return IDENTIFIER;}
+"true"                  {yylval.value = new Node(VALUE, make_true(), ""); return VALUE;}
+"false"                 {yylval.value = new Node(VALUE, make_false(), ""); return VALUE;}
+\".*\"                   {yylval.value = new Node(VALUE, make_string(substring(yytext, 1, strlen(yytext) - 1)), ""); return VALUE; }
+{DIGIT}                 {yylval.value = new Node(VALUE, make_long(atoi(yytext)), ""); return VALUE;}
+{DIGIT}*"."?{DIGIT}+    {yylval.value = new Node(VALUE, make_double(atof(yytext)), ""); return VALUE;}
+[_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = new Node(IDENTIFIER,  nullptr, strdup(yytext)); return IDENTIFIER;}
 [\n]                    {linenum++;} 
 [ \t\r]+                {}
 .                       {printf("Error: invlaid lexeme '%s'.\n", yytext); return 0;}
