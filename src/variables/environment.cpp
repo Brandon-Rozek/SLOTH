@@ -15,9 +15,9 @@ struct Variable* find_variable(struct Environment* env, std::string id) {
         return element->id == id;
     });
 
-    if (result != env->vars.end()) {
-        return *result;
-    }
+  if (result != env->vars.end()) {
+    return *result;
+  }
 
   return nullptr;
 }

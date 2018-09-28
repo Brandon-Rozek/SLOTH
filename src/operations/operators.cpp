@@ -196,7 +196,7 @@ struct Value* equals(struct Value* x, struct Value* y) {
     std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
   
-  struct Value* ans;
+  struct Value* ans = nullptr;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -224,7 +224,7 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
     std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
   
-  struct Value* ans;
+  struct Value* ans= nullptr;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
