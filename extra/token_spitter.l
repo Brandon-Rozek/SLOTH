@@ -31,6 +31,8 @@
 #define COMMENT      128
 #define ERROR        129
 #define WHITESPACE   130
+#define LAMBDA 131
+#define COLON 132
 %}
 ALPHA [a-zA-Z]
 DIGIT [0-9]
@@ -44,7 +46,7 @@ DIGIT [0-9]
 "("                     {return OPENPAREM;}
 ")"                     {return ENDPAREM;}
 ";"                     {return SEMICOLON;}
-%.*\n                   {return COMMENT;}
+%.*\n                   {} // Comments
 "<"                     {return LESS;}
 ">"                     {return GREATER;}
 "<="                    {return LESSEQ;}
@@ -63,11 +65,17 @@ DIGIT [0-9]
 "while"                 {return WHILE;}
 "print"                 {return PRINT;}
 "input"                 {return INPUT;}
+"lambda"                {return LAMBDA;}
+":"                     {return COLON;}
+"true"                  {return VALUE;}
+"false"                 {return VALUE;}
+\".*\"                  {return VALUE; }
+{DIGIT}                 {return VALUE;}
 {DIGIT}*"."?{DIGIT}+    {return VALUE;}
 [_a-zA-Z][_a-zA-Z0-9]*  {return IDENTIFIER;}
-[ \n\t\r]+              {return WHITESPACE;}
-.                       {printf("Syntax Error! Received: %s\n", yytext); return ERROR;}
-
+[\n]                    { } 
+[ \t\r]+                {}
+.                       {printf("Error: invlaid lexeme '%s'.\n", yytext); return 0;}
 %%
 int main(int argc, char* argv[]) {
     if (argc != 2) {
