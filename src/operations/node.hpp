@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <string>
+#include <array>
 #include "../variables/value.hpp"
 #include "../variables/environment.hpp"
 
@@ -18,7 +19,7 @@ struct Node {
 
   /* at most three children nodes */
   int num_children;
-  struct Node* children[MAX_CHILDREN];
+  std::array<struct Node*, MAX_CHILDREN> children;
 };
 
 // Abstract Syntax Tree Functions
