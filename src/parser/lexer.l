@@ -41,7 +41,7 @@ DIGIT [0-9]
 "while"                 {return WHILE;}
 "print"                 {return PRINT;}
 "input"                 {return INPUT;}
-"lambda"                {return LAMBDA;}
+"lambda"                {return LAMBDATAG;}
 ":"                     {return COLON;}
 "true"                  {yylval.value = new Node(VALUE, make_true(), ""); return VALUE;}
 "false"                 {yylval.value = new Node(VALUE, make_false(), ""); return VALUE;}

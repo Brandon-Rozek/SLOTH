@@ -54,7 +54,7 @@ void print_tree(struct Node* node, uint tabs) {
     case WHILE: std::cout << "WHILE:" << std::endl; break;
     case PRINT: std::cout << "PRINT:" << std::endl; break;
     case INPUT: std::cout << "INPUT:" << std::endl; break;
-    case LAMBDA: std::cout << "LAMBDA:" << std::endl; break;
+    case LAMBDATAG: std::cout << "LAMBDA:" << std::endl; break;
     case CALLFUNC: std::cout << "FUNCCALL:" << std::endl; break;
     case STATEMENT: std::cout << "STATEMENT:" << std::endl; break;
     case VALUE: 
@@ -92,7 +92,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   struct Value* val1 = nullptr;
   struct Value* val2 = nullptr;
   // struct Value* val3 = nullptr;
-  if (node->num_children > 0 && node->type != LAMBDA) {
+  if (node->num_children > 0 && node->type != LAMBDATAG) {
     val1 = eval_expression(node->children[0], env);
     if (node->num_children > 1) {
       val2 = eval_expression(node->children[1], env);
@@ -103,7 +103,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
   }
 
   switch(node->type) {
-    case LAMBDA: return make_expression(node); break;
+    case LAMBDATAG: return make_expression(node); break;
     case CALLFUNC:
       check_num_nodes(node, 2, "cannot have more than two nodes for a function call.");
       tempNode = get_expression(get_value(find_variable(env, node->children[0]->id)));
