@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "environment.hpp"
 #include "variable.hpp"
 
@@ -9,11 +10,15 @@ struct Environment* create_environment(void) {
 }
 
 struct Variable* find_variable(struct Environment* env, std::string id) {
-  for (uint i = 0; i < size(env->vars); i++) {
-    if (id.compare(env->vars[i]->id) == 0) {
-      return env->vars[i];
+  auto result = std::find_if(env->vars.begin(), env->vars.end(), 
+    [id](const Variable* element) {
+        return element->id == id;
+    });
+
+    if (result != env->vars.end()) {
+        return *result;
     }
-  }
+
   return nullptr;
 }
 
