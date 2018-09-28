@@ -25,45 +25,45 @@ void print_tree(struct Node* node, int tabs) {
   int i;
   /* base case */
   if(!node) {
-    fprintf(stderr, "NO TREE STRUCTURE\n");
+    std::cerr << "NO TREE STRUCTURE" << std::endl;
     return;
   }
 
   /* print leading tabs */
   for(i = 0; i < tabs; i++) {
-    printf("    ");
+    std::cout << "    ";
   }
 
   switch(node->type) {
-    case IDENTIFIER: printf("IDENTIFIER: %s\n", node->id); break;
-    case PLUS: printf("PLUS:\n"); break;
-    case MINUS: printf("MINUS:\n"); break;
-    case DIVIDE: printf("DIVIDE:\n"); break;
-    case TIMES: printf("TIMES:\n"); break;
-    case LESS: printf("LESS THAN:\n"); break;
-    case GREATER: printf("GREATER:\n"); break;
-    case LESSEQ: printf("LESS EQUAL:\n"); break;
-    case GREATEREQ: printf("GREATER EQUAL:\n"); break;
-    case EQUALS: printf("EQUALS:\n"); break;
-    case NEQUALS: printf("NOT EQUALS:\n"); break;
-    case AND: printf("AND:\n"); break;
-    case OR: printf("OR:\n"); break;
-    case NOT: printf("NOT:\n"); break;
-    case ASSIGN: printf("ASSIGN:\n"); break;
-    case IF: printf("IF:\n"); break;
-    case WHILE: printf("WHILE:\n"); break;
-    case PRINT: printf("PRINT:\n"); break;
-    case INPUT: printf("INPUT:\n"); break;
-    case LAMBDA: printf("LAMBDA:\n"); break;
-    case CALLFUNC: printf("FUNCTIONCALL:\n"); break;
-    case STATEMENT: printf("STATEMENT:\n"); break;
+    case IDENTIFIER: std::cout << "IDENTIFIER: " << node->id << std::endl; break;
+    case PLUS: std::cout << "PLUS:" << std::endl; break;
+    case MINUS: std::cout << "MINUS:" << std::endl; break;
+    case DIVIDE: std::cout << "DIVIDE:" << std::endl; break;
+    case TIMES: std::cout << "TIMES:" << std::endl; break;
+    case LESS: std::cout << "LESS THAN:" << std::endl; break;
+    case GREATER: std::cout << "GREATER:" << std::endl; break;
+    case LESSEQ: std::cout << "LESS EQUAL:" << std::endl; break;
+    case GREATEREQ: std::cout << "GREATER EQUAL:" << std::endl; break;
+    case EQUALS: std::cout << "EQUAL:" << std::endl; break;
+    case NEQUALS: std::cout << "NOT EQUAL:" << std::endl; break;
+    case AND: std::cout << "AND:" << std::endl; break;
+    case OR: std::cout << "OR:" << std::endl; break;
+    case NOT: std::cout << "NOT:" << std::endl; break;
+    case ASSIGN: std::cout << "ASSIGN:" << std::endl; break;
+    case IF: std::cout << "IF:" << std::endl; break;
+    case WHILE: std::cout << "WHILE:" << std::endl; break;
+    case PRINT: std::cout << "PRINT:" << std::endl; break;
+    case INPUT: std::cout << "INPUT:" << std::endl; break;
+    case LAMBDA: std::cout << "LAMBDA:" << std::endl; break;
+    case CALLFUNC: std::cout << "FUNCCALL:" << std::endl; break;
+    case STATEMENT: std::cout << "STATEMENT:" << std::endl; break;
     case VALUE: 
-      printf("VALUE: ");
+      std::cout << "VALUE: ";
       print_value(node->value);
-      printf("\n");
+      std::cout << std::endl;
      break;
     default:
-      printf("Error, %d not a valid node type.\n", node->type);
+      std::cerr << "Error, " << node->type << " is not a valid node type." << std::endl;
       exit(1);
   }
 
@@ -118,7 +118,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
       tempNode = get_expression(get_value(find_variable(env, node->children[0]->id)));
       local_env = new Environment();
       add_variable(local_env, 
-        make_variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
+        new Variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
           eval_expression(node->children[1], env)));
       tempVal =  eval_expression(tempNode->children[1], local_env);
       delete_environment(local_env);
@@ -212,7 +212,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
     case IDENTIFIER:
       var = find_variable(env, node->id);
       if (var == nullptr) {
-        fprintf(stderr, "Error: Symbol %s not found.\n", node->id);
+        std::cerr << "Error: Symbol " << node->id << " not found." << std::endl;
         return 0;
       }
       return get_value(var);
@@ -243,7 +243,7 @@ void eval_statement(struct Node* node, struct Environment* env) {
     case ASSIGN:
       check_num_nodes(node, 2, "cannot make an assignment without an identifier and a value.");
       add_variable(env, 
-        make_variable(node->children[0]->id, 
+        new Variable(node->children[0]->id, 
           eval_expression(node->children[1], env)));
       break;
     //------------
