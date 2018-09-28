@@ -4,11 +4,6 @@
 #include "environment.hpp"
 #include "variable.hpp"
 
-struct Environment* create_environment(void) {
-  struct Environment* env = new Environment();
-  return env;
-}
-
 struct Variable* find_variable(struct Environment* env, std::string id) {
   auto result = std::find_if(env->vars.begin(), env->vars.end(), 
     [id](const Variable* element) {

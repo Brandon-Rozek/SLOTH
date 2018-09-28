@@ -48,7 +48,7 @@ void start_shell() {
     printf("Welcome to SLOTH Version 0.0.1\n");
     printf("Press CTRL+C to Exit\n");
 
-    struct Environment* env = create_environment();
+    struct Environment* env = new Environment();
     while (1) {
         // Read line from user and input it into the history
         char* input = readline("sloth> ");

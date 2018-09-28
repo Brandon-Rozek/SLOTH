@@ -35,7 +35,7 @@ void interpret_file(char* fileName) {
 
   // Interpret the AST
   // print_tree(result, 0); // For debugging
-  struct Environment* env = create_environment();
+  struct Environment* env = new Environment();
   eval_statement(result, env);
   delete_environment(env);
   delete_tree(result);

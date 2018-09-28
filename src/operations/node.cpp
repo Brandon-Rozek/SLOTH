@@ -136,7 +136,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
     case CALLFUNC:
       check_num_nodes(node, 2, "cannot have more than two nodes for a function call.");
       tempNode = get_expression(get_value(find_variable(env, node->children[0]->id)));
-      local_env = create_environment();
+      local_env = new Environment();
       add_variable(local_env, 
         make_variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
           eval_expression(node->children[1], env)));
