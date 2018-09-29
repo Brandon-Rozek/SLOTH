@@ -90,6 +90,7 @@ Value* eval_expression(Node* node, Environment* env) {
 
   // Needed if we are going to take input from the user
   double temp;
+  std::vector<double> tempDecs;
   Variable* var = nullptr;
   Environment* local_env = nullptr;
   Node* tempNode = nullptr;
@@ -118,7 +119,7 @@ Value* eval_expression(Node* node, Environment* env) {
       add_variable(local_env, 
         new Variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
           eval_expression(node->children[1], env)));
-      tempVal =  eval_expression(tempNode->children[1], local_env);
+      tempVal = eval_expression(tempNode->children[1], local_env);
       delete local_env;
       return tempVal;
       break;
@@ -203,7 +204,8 @@ Value* eval_expression(Node* node, Environment* env) {
     //----------
     case INPUT: // We're only going to support reading in doubles
       scanf("%lf", &temp);
-      return make_double(temp);
+      tempDecs.push_back(temp);
+      return make_double(tempDecs);
       break;
     //----------
     case IDENTIFIER:
@@ -235,6 +237,7 @@ void eval_statement(Node* node, Environment* env) {
   }
 
   Value* tempVal;
+  std::vector<long> tempLong;
 
   switch(node->type) {
     case ASSIGN:
@@ -250,7 +253,9 @@ void eval_statement(Node* node, Environment* env) {
       }
       tempVal = eval_expression(node->children[0], env);
       if (tempVal->type == BOOLEAN) {
-        if (get_long(tempVal)) {
+        tempLong = get_long(tempVal);
+        if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your if expression" << std::endl; break;}
+        if (tempLong[0]) {
           eval_statement(node->children[1], env);
         } else if (node->num_children == 3) {
         eval_statement(node->children[2], env);
@@ -264,9 +269,13 @@ void eval_statement(Node* node, Environment* env) {
       check_num_nodes(node, 2, "the format of a while statement is: while expression statement(s)");
       tempVal = eval_expression(node->children[0], env);
       if (tempVal->type == BOOLEAN) {
-        while (get_long(tempVal)) {
+        tempLong = get_long(tempVal);
+        if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your while expression" << std::endl; break;}
+        while (tempLong[0]) {
           eval_statement(node->children[1], env);
           tempVal = eval_expression(node->children[0], env);
+          tempLong = get_long(tempVal);
+          if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your while expression" << std::endl; break;}
         }
       } else {
         fprintf(stderr, "Error, a non-boolean was in the condition of the while loop.\n");

@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 #include "../operations/node.hpp"
 #include "../variables/value.hpp"
 #include "parser.tab.h"
@@ -21,6 +22,8 @@ DIGIT [0-9]
 "!"                     {return NOT;}
 "("                     {return OPENPAREM;}
 ")"                     {return ENDPAREM;}
+"["                     {return OPENVECTOR;}
+"]"                     {return CLOSEVECTOR;}
 ";"                     {return SEMICOLON;}
 %.*\n                   {} // Comments
 "<"                     {return LESS;}
@@ -46,8 +49,8 @@ DIGIT [0-9]
 "true"                  {yylval.value = new Node(VALUE, make_true(), ""); return VALUE;}
 "false"                 {yylval.value = new Node(VALUE, make_false(), ""); return VALUE;}
 \".*\"                   {yylval.value = new Node(VALUE, make_string(substring(yytext, 1, strlen(yytext) - 1)), ""); return VALUE; }
-{DIGIT}                 {yylval.value = new Node(VALUE, make_long(atoi(yytext)), ""); return VALUE;}
-{DIGIT}*"."?{DIGIT}+    {yylval.value = new Node(VALUE, make_double(atof(yytext)), ""); return VALUE;}
+{DIGIT}                 {std::vector<long> nums; nums.push_back(atoi(yytext)); yylval.value = new Node(VALUE, make_long(nums), ""); return VALUE;}
+{DIGIT}*"."?{DIGIT}+    {std::vector<double> decs; decs.push_back(atof(yytext)); yylval.value = new Node(VALUE, make_double(decs), ""); return VALUE;}
 [_a-zA-Z][_a-zA-Z0-9]*  {yylval.value = new Node(IDENTIFIER,  nullptr, strdup(yytext)); return IDENTIFIER;}
 [\n]                    {linenum++;} 
 [ \t\r]+                {}
