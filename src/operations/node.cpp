@@ -21,47 +21,53 @@ void check_num_nodes(Node* node, uint num_children, std::string error) {
   }
 }
 
-void print_tree(Node* node, uint tabs) {
+std::ostream & operator << (std::ostream &out, const Node* n) { 
+  out << n->toString();
+  return out;
+}
+
+std::string Node::toString() const {
+  return tree_string(this, 0);
+}
+
+std::string tree_string(const Node* node, uint tabs) {
+  std::string result = "";
   uint i;
   /* base case */
   if(!node) {
-    std::cerr << "NO TREE STRUCTURE" << std::endl;
-    return;
+    result += "NO TREE STRUCTURE\n";
+    return result;
   }
 
   /* print leading tabs */
   for(i = 0; i < tabs; i++) {
-    std::cout << "    ";
+    result += "    ";
   }
 
   switch(node->type) {
-    case IDENTIFIER: std::cout << "IDENTIFIER: " << node->id << std::endl; break;
-    case PLUS: std::cout << "PLUS:" << std::endl; break;
-    case MINUS: std::cout << "MINUS:" << std::endl; break;
-    case DIVIDE: std::cout << "DIVIDE:" << std::endl; break;
-    case TIMES: std::cout << "TIMES:" << std::endl; break;
-    case LESS: std::cout << "LESS THAN:" << std::endl; break;
-    case GREATER: std::cout << "GREATER:" << std::endl; break;
-    case LESSEQ: std::cout << "LESS EQUAL:" << std::endl; break;
-    case GREATEREQ: std::cout << "GREATER EQUAL:" << std::endl; break;
-    case EQUALS: std::cout << "EQUAL:" << std::endl; break;
-    case NEQUALS: std::cout << "NOT EQUAL:" << std::endl; break;
-    case AND: std::cout << "AND:" << std::endl; break;
-    case OR: std::cout << "OR:" << std::endl; break;
-    case NOT: std::cout << "NOT:" << std::endl; break;
-    case ASSIGN: std::cout << "ASSIGN:" << std::endl; break;
-    case IF: std::cout << "IF:" << std::endl; break;
-    case WHILE: std::cout << "WHILE:" << std::endl; break;
-    case PRINT: std::cout << "PRINT:" << std::endl; break;
-    case INPUT: std::cout << "INPUT:" << std::endl; break;
-    case LAMBDATAG: std::cout << "LAMBDA:" << std::endl; break;
-    case CALLFUNC: std::cout << "FUNCCALL:" << std::endl; break;
-    case STATEMENT: std::cout << "STATEMENT:" << std::endl; break;
-    case VALUE: 
-      std::cout << "VALUE: ";
-      print_value(node->value);
-      std::cout << std::endl;
-     break;
+    case IDENTIFIER: result += "IDENTIFIER: " + node->id + "\n"; break;
+    case PLUS: result += "PLUS:\n"; break;
+    case MINUS: result += "MINUS:\n"; break;
+    case DIVIDE: result += "DIVIDE:\n"; break;
+    case TIMES: result += "TIMES:\n"; break;
+    case LESS: result += "LESS THAN:\n"; break;
+    case GREATER: result += "GREATER:\n"; break;
+    case LESSEQ: result += "LESS EQUAL:\n"; break;
+    case GREATEREQ: result += "GREATER EQUAL:\n"; break;
+    case EQUALS: result += "EQUAL:\n"; break;
+    case NEQUALS: result += "NOT EQUAL:\n"; break;
+    case AND: result += "AND:\n"; break;
+    case OR: result += "OR:\n"; break;
+    case NOT: result += "NOT:\n"; break;
+    case ASSIGN: result += "ASSIGN:\n"; break;
+    case IF: result += "IF:\n"; break;
+    case WHILE: result += "WHILE:\n"; break;
+    case PRINT: result += "PRINT:\n"; break;
+    case INPUT: result += "INPUT:\n"; break;
+    case LAMBDATAG: result += "LAMBDA:\n"; break;
+    case CALLFUNC: result += "FUNCCALL:\n"; break;
+    case STATEMENT: result += "STATEMENT:\n"; break;
+    case VALUE: result += "VALUE: " + node->value->toString() + "\n"; break;
     default:
       std::cerr << "Error, " << node->type << " is not a valid node type." << std::endl;
       exit(1);
@@ -69,10 +75,11 @@ void print_tree(Node* node, uint tabs) {
 
   /* print all children nodes underneath */
   for(i = 0; i < node->num_children; i++) {
-    print_tree(node->children[i], tabs + 1);
+    result += tree_string(node->children[i], tabs + 1);
   }
-}
 
+  return result;
+}
 
 Value* eval_expression(Node* node, Environment* env) {
   /* base case */
@@ -195,7 +202,6 @@ Value* eval_expression(Node* node, Environment* env) {
       break;
     //----------
     case INPUT: // We're only going to support reading in doubles
-      // Look into deleting possible values...?
       scanf("%lf", &temp);
       return make_double(temp);
       break;
@@ -271,8 +277,7 @@ void eval_statement(Node* node, Environment* env) {
     case PRINT:
       check_num_nodes(node, 1, "can only print out one expression at a time.");
       tempVal = eval_expression(node->children[0], env);
-      print_value(tempVal);
-      printf("\n");
+      std::cout << tempVal << std::endl;
       break;
     //------------
     case STATEMENT: // Can have a maximum of two children statement nodes

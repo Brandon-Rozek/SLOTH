@@ -24,7 +24,11 @@ class Node {
   /* at most three children nodes */
   uint num_children;
   std::array<Node*, MAX_CHILDREN> children;
-  
+
+  friend std::ostream & operator << (std::ostream &out, const Node* n);
+
+  std::string toString(void) const;
+
   Node(int t, Value* v, std::string s) {
     type = t;
     value = v;
@@ -45,7 +49,7 @@ class Node {
 // Abstract Syntax Tree Functions
 // struct Node* make_node(int type, struct Value* value, std::string id);
 void attach_node(Node* parent, Node* child);
-void print_tree(Node* node, int tabs);
+std::string tree_string(const Node* node, uint tabs);
 
 // Interpreting AST
 void eval_statement(Node* node, Environment* env);
