@@ -23,12 +23,6 @@ class Variable {
 
 // Variable Functions
 void set_value(Variable* var, Value* value);
-Value* get_value(Variable* var);
-Value* make_long(long num);
-Value* make_double(double dec);
-Value* make_true();
-Value* make_false();
-Value* make_boolean(int x);
-Value* make_expression(Node* expr);
+Value* get_value(const Variable* var);
 
 #endif
