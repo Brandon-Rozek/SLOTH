@@ -6,7 +6,7 @@
 void interpret_file(char* fileName);
 
 /* the result variable */
-struct Node* result;
+Node* result;
 
 int main(int argc, char* argv[]) {
   if (argc == 1) {
@@ -35,10 +35,8 @@ void interpret_file(char* fileName) {
 
   // Interpret the AST
   // print_tree(result, 0); // For debugging
-  struct Environment* env = new Environment();
+  Environment* env = new Environment();
   eval_statement(result, env);
-  delete_environment(env);
-  // delete env;
-
+  delete env;
   delete result;
 }

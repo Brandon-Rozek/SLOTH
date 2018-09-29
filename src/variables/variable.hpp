@@ -2,26 +2,33 @@
 #define VARIABLE_H
 
 #include <string>
-#include "../operations/node.hpp"
+#include "../variables/value.hpp"
 
-struct Variable {
+class Value;
+class Node;
+
+class Variable {
+  public:
   std::string id;
-  struct Value* value;
+  Value* value;
 
-  Variable(std::string s, struct Value* val) {
+  Variable(std::string s, Value* val) {
     id = s;
     value = val;
+  }
+  ~Variable() {
+    delete value;
   }
 };
 
 // Variable Functions
-void set_value(struct Variable* var, struct Value* value);
-struct Value* get_value(struct Variable* var);
-struct Value* make_long(long num);
-struct Value* make_double(double dec);
-struct Value* make_true();
-struct Value* make_false();
-struct Value* make_boolean(int x);
-struct Value* make_expression(struct Node* expr);
+void set_value(Variable* var, Value* value);
+Value* get_value(Variable* var);
+Value* make_long(long num);
+Value* make_double(double dec);
+Value* make_true();
+Value* make_false();
+Value* make_boolean(int x);
+Value* make_expression(Node* expr);
 
 #endif

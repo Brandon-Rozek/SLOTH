@@ -2,14 +2,14 @@
 #include "operators.hpp"
 #include "../variables/value.hpp"
 
-struct Value* add(struct Value* x, struct Value* y) {
+Value* add(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in add." << std::endl; }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot add a boolean." << std::endl; }
   if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
     std::cerr << "Error, cannot add a string with another data type." << std::endl;
   }
   
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -27,12 +27,12 @@ struct Value* add(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* subtract(struct Value* x, struct Value* y) {
+Value* subtract(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in subtract." << std::endl; }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot subtract a boolean." << std::endl; }
   if (x->type == STRING || y->type == STRING) { std::cerr << "Error, cannot subtract a string." << std::endl; }
   
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -48,12 +48,12 @@ struct Value* subtract(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* division(struct Value* x, struct Value* y) {
+Value* division(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in divide." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot divide a boolean." << std::endl;  }
   if (x->type == STRING || y->type == STRING) { std::cerr << "Error, cannot division a string." << std::endl;  }
   
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -69,12 +69,12 @@ struct Value* division(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* multiplication(struct Value* x, struct Value* y) {
+Value* multiplication(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in multiply." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot multiply a boolean." << std::endl;  }
   if (x->type == STRING || y->type == STRING) { std::cerr << "Error, cannot multiply a string." << std::endl;  }
   
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -90,14 +90,14 @@ struct Value* multiplication(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* less(struct Value* x, struct Value* y) {
+Value* less(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in <." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot numerically compare a boolean." << std::endl;  }
     if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
       std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
 
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -115,14 +115,14 @@ struct Value* less(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* greater(struct Value* x, struct Value* y) {
+Value* greater(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in greater." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot numerically compare a boolean." << std::endl;  }
     if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
       std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
 
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -140,14 +140,14 @@ struct Value* greater(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* less_equal(struct Value* x, struct Value* y) {
+Value* less_equal(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in <=." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot numerically compare a boolean." << std::endl;  }
     if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
       std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
 
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -165,14 +165,14 @@ struct Value* less_equal(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* greater_equal(struct Value* x, struct Value* y) {
+Value* greater_equal(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in >=." << std::endl;  }
   if (x->type == BOOLEAN || y->type == BOOLEAN) { std::cerr << "Error, cannot numerically compare a boolean." << std::endl;  }
     if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
       std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
 
-  struct Value* ans;
+  Value* ans;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -190,13 +190,13 @@ struct Value* greater_equal(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* equals(struct Value* x, struct Value* y) {
+Value* equals(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in ==." << std::endl;  }
   if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
     std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
   
-  struct Value* ans = nullptr;
+  Value* ans = nullptr;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -218,13 +218,13 @@ struct Value* equals(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* not_equals(struct Value* x, struct Value* y) {
+Value* not_equals(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in !=." << std::endl;  }
   if ((x->type == STRING || y->type == STRING) && (x->type != STRING || y->type != STRING)) {
     std::cerr << "Error, cannot compare a string with another data type." << std::endl; 
   }
   
-  struct Value* ans= nullptr;
+  Value* ans= nullptr;
 
   // Destruct all four cases
   if (x->type == LONG && y->type == LONG) {
@@ -246,7 +246,7 @@ struct Value* not_equals(struct Value* x, struct Value* y) {
   return ans;
 }
 
-struct Value* and_value(struct Value* x, struct Value* y) {
+Value* and_value(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in &&." << std::endl;  }
   if (x->type != BOOLEAN || y->type != BOOLEAN) { std::cerr << "Error, cannot use and AND operation with a non-boolean." << std::endl;  }
   if (x->type == STRING || y->type == STRING) { std::cerr << "Error, cannot AND a string." << std::endl;  }
@@ -254,7 +254,7 @@ struct Value* and_value(struct Value* x, struct Value* y) {
   return make_boolean(get_long(x) && get_long(y));
 }
 
-struct Value* or_value(struct Value* x, struct Value* y) {
+Value* or_value(Value* x, Value* y) {
   if (!x || !y) { std::cerr << "Error, uninitialized values being used in ||." << std::endl;  }
   if (x->type != BOOLEAN || y->type != BOOLEAN) { std::cerr << "Error, cannot use and OR operation with a non-boolean." << std::endl;  }
   if (x->type == STRING || y->type == STRING) { std::cerr << "Error, cannot OR a string." << std::endl;  }
@@ -262,7 +262,7 @@ struct Value* or_value(struct Value* x, struct Value* y) {
   return make_boolean(get_long(x) || get_long(y));
 }
 
-struct Value* not_value(struct Value* x) {
+Value* not_value(Value* x) {
   if (!x) { std::cerr << "Error, uninitialized values being used in !." << std::endl;  }
   if (x->type != BOOLEAN) { std::cerr << "Error, cannot NOT a non-boolean." << std::endl;  }
   if (x->type == STRING) { std::cerr << "Error, cannot negate a string." << std::endl;  }

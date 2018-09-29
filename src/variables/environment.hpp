@@ -5,19 +5,21 @@
 #include <string>
 #include <vector>
 
-struct Environment {
-  std::vector<struct Variable*> vars;
+class Variable;
+
+class Environment {
+  public:
+  std::vector<Variable*> vars;
   Environment() {  }
-  // ~Environment() { 
-  //   for (uint i = 0; i < size(vars); i++) {
-  //       delete vars[i];
-  //   }
-  // }
+  ~Environment() { 
+    for (uint i = 0; i < size(vars); i++) {
+        delete vars[i];
+    }
+  }
 };
 
 // Variable Lookup Functions
-void delete_environment(struct Environment* env);
-struct Variable* find_variable(struct Environment* env, std::string id);
-void add_variable(struct Environment* env, struct Variable* var);
+Variable* find_variable(Environment* env, std::string id);
+void add_variable(Environment* env, Variable* var);
 
 #endif

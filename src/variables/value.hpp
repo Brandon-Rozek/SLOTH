@@ -1,35 +1,37 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+#include "../operations/node.hpp"
+#include <iostream>
 #include <string>
+#include <variant>
+
+class Node;
 
 enum TypeTag { DOUBLE, LONG, BOOLEAN, STRING, LAMBDA };
 
-union TypeVal {
-  long num;
-  double dec;
-  struct Node* expr;
-  std::string str;
-  TypeVal() { new(&str) std::string(); new(expr) struct Node*; } 
-  ~TypeVal() { free(&str); free(expr); }
-};
+class Value {
+  public:
+    enum TypeTag type;
+    std::variant<long, double, Node*, std::string> val;
 
-struct Value {
-  enum TypeTag type;
-  TypeVal value;
-  // Broken implemenation of constructor below
-  Value(TypeTag t, long n, double d, struct Node* e, std::string s) {
-    /* set properties */
-    type = t;
-    if (type == LONG || type == BOOLEAN) {
-      value.num = n;
-    } else if (type == DOUBLE){ // Assume DOUBLE
-      value.dec = d;
-    } else if (type == STRING) {
-      value.str = s;  
-    } else { // Assume lambda expression
-      value.expr = e;
+    Value(TypeTag t, long n, double d, Node* e, std::string s) {
+      /* set properties */
+      type = t;
+      
+      if (type == LONG || type == BOOLEAN) {
+        val = n;
+      } else if (type == DOUBLE){ // Assume DOUBLE
+        val = d;
+      } else if (type == STRING) {
+        val = s;  
+      } else { // Assume lambda expression
+        val = e;
+      }
     }
+
+  ~Value() {  
+    std::cout << "VALUE DESTROYED" << std::endl;
   }
 };
 

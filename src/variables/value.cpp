@@ -2,65 +2,74 @@
 #include "value.hpp"
 #include <string>
 #include <iostream>
+#include <variant>
 #include "../parser/parser.tab.h"
 
-struct Value* make_long(long num) {
+Value* make_long(long num) {
   return new Value(LONG, num, 0, nullptr, "");
 }
-struct Value* make_double(double dec) {
+Value* make_double(double dec) {
   return new Value(DOUBLE, 0, dec, nullptr, "");
 }
-struct Value* make_true() {
+Value* make_true() {
   return new Value(BOOLEAN, 1, 0, nullptr, "");
 }
-struct Value* make_false() {
+Value* make_false() {
   return new Value(BOOLEAN, 0, 0, nullptr, "");
 }
-struct Value* make_boolean(int x) {
+Value* make_boolean(int x) {
   return (x)? make_true() : make_false();
 }
-struct Value* make_expression(struct Node* expr) {
+Value* make_expression(Node* expr) {
   return new Value(LAMBDA, 0, 0, expr, "");
 }
-struct Value* make_string(std::string str) {
+Value* make_string(std::string str) {
   return new Value(STRING, 0, 0, nullptr, str);
 }
 
-void delete_value(struct Value* val) {
+void delete_value(Value* val) {
   free(val);
 }
 
-long get_long(struct Value* val) {
-  return val->value.num;
+long get_long(Value* val) {
+  // return val->value.num;
+  return std::get<long>(val->val);
 }
-double get_double(struct Value* val) {
-  return val->value.dec;
+double get_double(Value* val) {
+  // return val->value.dec;
+  return std::get<double>(val->val);
 }
-struct Node* get_expression(struct Value* val) {
-  return val->value.expr;
+Node* get_expression(Value* val) {
+  // return val->value.expr;
+  return std::get<Node*>(val->val);
 }
-std::string get_string(struct Value* val) {
-  return val->value.str;
+std::string get_string(Value* val) {
+  // return val->value.str;
+  return std::get<std::string>(val->val);
 }
 
-void set_long(struct Value* val, long num) {
+void set_long(Value* val, long num) {
   val->type = LONG;
-  val->value.num = num;
+  // val->value.num = num;
+  val->val = num;
 }
-void set_double(struct Value* val, double dec) {
+void set_double(Value* val, double dec) {
   val->type = DOUBLE;
-  val->value.dec = dec;
+  // val->value.dec = dec;
+  val->val = dec;
 }
-void set_expression(struct Value* val, struct Node* expr) {
+void set_expression(Value* val, Node* expr) {
   val->type = LAMBDA;
-  val->value.expr = expr;
+  // val->value.expr = expr;
+  val->val = expr;
 }
-void set_sring(struct Value* val, std::string str) {
+void set_sring(Value* val, std::string str) {
   val->type = STRING;
-  val->value.str = str;
+  // val->value.str = str;
+  val->val = str;
 }
 
-void print_value(struct Value* val) {
+void print_value(Value* val) {
   if (val->type == BOOLEAN) {
     if (get_long(val)) {
       std::cout << "true";

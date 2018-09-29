@@ -8,20 +8,20 @@
 #include "../variables/variable.hpp"
 
 /* attach an existing node onto a parent */
-void attach_node(struct Node* parent, struct Node* child) {
+void attach_node(Node* parent, Node* child) {
   /* connect it */
   parent->children[parent->num_children] = child;
   parent->num_children++;
   if (parent->num_children > MAX_CHILDREN) { std::cerr << "Error, max children attached to a node" << std::endl; }
 }
 
-void check_num_nodes(struct Node* node, uint num_children, std::string error) {
+void check_num_nodes(Node* node, uint num_children, std::string error) {
   if (node && node->num_children != num_children) {
     std::cerr << "Error, " << error << std::endl;
   }
 }
 
-void print_tree(struct Node* node, uint tabs) {
+void print_tree(Node* node, uint tabs) {
   uint i;
   /* base case */
   if(!node) {
@@ -74,7 +74,7 @@ void print_tree(struct Node* node, uint tabs) {
 }
 
 
-struct Value* eval_expression(struct Node* node, struct Environment* env) {
+Value* eval_expression(Node* node, Environment* env) {
   /* base case */
   if(!node) {
     fprintf(stderr, "Error: No tree structure to evaluate\n");
@@ -83,14 +83,14 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
 
   // Needed if we are going to take input from the user
   double temp;
-  struct Variable* var = nullptr;
-  struct Environment* local_env = nullptr;
-  struct Node* tempNode = nullptr;
-  struct Value* tempVal = nullptr;
+  Variable* var = nullptr;
+  Environment* local_env = nullptr;
+  Node* tempNode = nullptr;
+  Value* tempVal = nullptr;
 
   // Evaluate subexpressions if existent and node is not a lambda expression
-  struct Value* val1 = nullptr;
-  struct Value* val2 = nullptr;
+  Value* val1 = nullptr;
+  Value* val2 = nullptr;
   // struct Value* val3 = nullptr;
   if (node->num_children > 0 && node->type != LAMBDATAG) {
     val1 = eval_expression(node->children[0], env);
@@ -112,8 +112,7 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
         new Variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
           eval_expression(node->children[1], env)));
       tempVal =  eval_expression(tempNode->children[1], local_env);
-      delete_environment(local_env);
-      // delete local_env;
+      delete local_env;
       return tempVal;
       break;
     case PLUS:
@@ -222,14 +221,14 @@ struct Value* eval_expression(struct Node* node, struct Environment* env) {
 }
 
 
-void eval_statement(struct Node* node, struct Environment* env) {
+void eval_statement(Node* node, Environment* env) {
   /* base case */
   if(!node) {
     fprintf(stderr, "Error: No tree structure to evaluate\n");
     return;
   }
 
-  struct Value* tempVal;
+  Value* tempVal;
 
   switch(node->type) {
     case ASSIGN:
