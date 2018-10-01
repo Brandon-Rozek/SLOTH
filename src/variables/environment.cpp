@@ -30,3 +30,8 @@ void add_variable(Environment* env, Variable* var) {
   env->vars.push_back(var);
 }
 
+  Environment::~Environment() { 
+    for (uint i = 0; i < size(vars); i++) {
+        delete vars[i];
+    }
+  }

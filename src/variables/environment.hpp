@@ -11,11 +11,7 @@ class Environment {
   public:
   std::vector<Variable*> vars;
   Environment() {  }
-  ~Environment() { 
-    for (uint i = 0; i < size(vars); i++) {
-        delete vars[i];
-    }
-  }
+  ~Environment();
 };
 
 // Variable Lookup Functions

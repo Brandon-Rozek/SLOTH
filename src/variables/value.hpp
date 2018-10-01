@@ -77,6 +77,8 @@ std::string get_string(const Value* val);
 
 // Setters
 void set_long(Value* val, std::vector<long> num);
+void set_boolean(Value* val, int x);
+void set_booleans(Value* val, std::vector<long> num);
 void set_double(Value* val, std::vector<double> dec);
 void set_expression(Value* val, Node* node);
 void set_string(Value* val, std::string str);

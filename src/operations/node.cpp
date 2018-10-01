@@ -114,7 +114,9 @@ Value* eval_expression(Node* node, Environment* env) {
     case LAMBDATAG: return make_expression(node); break;
     case CALLFUNC:
       check_num_nodes(node, 2, "cannot have more than two nodes for a function call.");
-      tempNode = get_expression(get_value(find_variable(env, node->children[0]->id)));
+      tempVal = get_value(find_variable(env, node->children[0]->id));
+      tempNode = get_expression(tempVal);
+      delete tempVal;
       local_env = new Environment();
       add_variable(local_env, 
         new Variable(tempNode->children[0]->id, // Get the name of the variable needed for the lambda expression
@@ -214,12 +216,10 @@ Value* eval_expression(Node* node, Environment* env) {
         std::cerr << "Error: Symbol " << node->id << " not found." << std::endl;
         return 0;
       }
-      // Change to return copy of value [TODO]
       return get_value(var);
       break;
     //----------
     case VALUE: 
-    // Change to return copy of value [TODO]
       return new Value(*node->value);
       break;
     //----------

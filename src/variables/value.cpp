@@ -71,6 +71,16 @@ void set_long(Value* val, std::vector<long> num) {
   val->type = LONG;
   val->val = num;
 }
+void set_boolean(Value* val, int x) {
+  val->type = BOOLEAN;
+  std::vector<long> result;
+  if (x) { result.push_back(1); } else { result.push_back(0); }
+  val->val = result;
+}
+void set_booleans(Value* val, std::vector<long> num) {
+  val->type = BOOLEAN;
+  val->val = num;
+}
 void set_double(Value* val, std::vector<double> dec) {
   val->type = DOUBLE;
   // val->value.dec = dec;
@@ -80,7 +90,7 @@ void set_expression(Value* val, Node* expr) {
   val->type = LAMBDA;
   val->val = expr;
 }
-void set_sring(Value* val, std::string str) {
+void set_string(Value* val, std::string str) {
   val->type = STRING;
   val->val = str;
 }
