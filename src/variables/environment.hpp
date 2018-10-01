@@ -12,11 +12,9 @@ class Environment {
   std::vector<Variable*> vars;
   Environment() {  }
   ~Environment() { 
-    // Currently this deletes the values of local environment which messes up
-    // double(double(5))
-    // for (uint i = 0; i < size(vars); i++) {
-    //     delete vars[i];
-    // }
+    for (uint i = 0; i < size(vars); i++) {
+        delete vars[i];
+    }
   }
 };
 

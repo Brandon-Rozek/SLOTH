@@ -214,11 +214,13 @@ Value* eval_expression(Node* node, Environment* env) {
         std::cerr << "Error: Symbol " << node->id << " not found." << std::endl;
         return 0;
       }
-      return get_value(var);
+      // Change to return copy of value [TODO]
+      return new Value(*get_value(var));
       break;
     //----------
     case VALUE: 
-      return node->value;
+    // Change to return copy of value [TODO]
+      return new Value(*node->value);
       break;
     //----------
     default:
