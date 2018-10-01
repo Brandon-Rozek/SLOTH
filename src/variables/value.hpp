@@ -52,7 +52,7 @@ class Value {
 
   // Destructor
   ~Value() {  
-    std::cout << "VALUE DESTROYED" << std::endl;
+    // std::cout << "VALUE DESTROYED" << std::endl;
   }
 };
 

@@ -46,6 +46,7 @@ std::string tree_string(const Node* node, uint tabs) {
 
   switch(node->type) {
     case IDENTIFIER: result += "IDENTIFIER: " + node->id + "\n"; break;
+    case VECTOR: result += "VECTOR:\n"; break;
     case PLUS: result += "PLUS:\n"; break;
     case MINUS: result += "MINUS:\n"; break;
     case DIVIDE: result += "DIVIDE:\n"; break;
@@ -81,6 +82,54 @@ std::string tree_string(const Node* node, uint tabs) {
   return result;
 }
 
+Value* parse_vector(Node* node) {
+  // We will only support homogeneous vectors
+  // Get the first data type from the first node
+  Value* tempValue = new Value(*node->value);
+  TypeTag type = tempValue->type;
+  delete tempValue;
+
+  // Only numeric types and booleans are supported currently
+  if (type != LONG && type != BOOLEAN && type != DOUBLE) {
+    std::cerr << "Error, only numeric types and booleans are supported in vector form." << std::endl;
+    return make_false();
+  }
+
+  std::vector<long> longResult;
+  std::vector<double> doubleResult;
+  bool lastNode = false;
+
+  Node* currentNode = node;
+  do {
+    if (currentNode->value->type == type) {
+      tempValue = new Value(*currentNode->value);
+      if (type == LONG || type == BOOLEAN) {
+        std::vector<long> tempVec = get_long(tempValue);
+        delete tempValue;
+        longResult.insert(std::end(longResult), std::begin(tempVec), std::end(tempVec));
+      } else { // Assume Double
+        std::vector<double> tempVec = get_double(tempValue);
+        delete tempValue;
+        doubleResult.insert(std::end(doubleResult), std::begin(tempVec), std::end(tempVec));
+      }
+    } else { std::cerr << "Error, only homogenous arrays are supported." << std::endl; return make_false(); }
+    if (currentNode->num_children == 0) {
+      lastNode = true;
+    } else {
+      currentNode = currentNode->children[0];
+    }
+  }  while (currentNode->num_children == 1 || !lastNode);
+
+
+
+  if (type == LONG || type == BOOLEAN) {
+    return make_long(longResult);
+  } else { // Assume double
+    return make_double(doubleResult);
+  }
+
+}
+
 Value* eval_expression(Node* node, Environment* env) {
   /* base case */
   if(!node) {
@@ -112,6 +161,7 @@ Value* eval_expression(Node* node, Environment* env) {
 
   switch(node->type) {
     case LAMBDATAG: return make_expression(node); break;
+    case VECTOR: return parse_vector(node->children[0]); break;
     case CALLFUNC:
       check_num_nodes(node, 2, "cannot have more than two nodes for a function call.");
       tempVal = get_value(find_variable(env, node->children[0]->id));

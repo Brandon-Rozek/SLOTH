@@ -46,6 +46,7 @@ DIGIT [0-9]
 "input"                 {return INPUT;}
 "lambda"                {return LAMBDATAG;}
 ":"                     {return COLON;}
+","                     {return COMMA;}
 "true"                  {yylval.value = new Node(VALUE, std::unique_ptr<Value>(make_true()), ""); return VALUE;}
 "false"                 {yylval.value = new Node(VALUE, std::unique_ptr<Value>(make_false()), ""); return VALUE;}
 \".*\"                   {yylval.value = new Node(VALUE, std::unique_ptr<Value>(make_string(substring(yytext, 1, strlen(yytext) - 1))), ""); return VALUE; }

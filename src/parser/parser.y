@@ -9,7 +9,7 @@
 
 /* declare type possibilities of symbols */
 %union {
-  struct Node* value;
+  Node* value;
 }
 
 /* declare tokens (default is typeless) */
@@ -31,7 +31,9 @@
 %token SEMICOLON    
 %token ASSIGN       
 %token OPENPAREM    
-%token ENDPAREM     
+%token ENDPAREM    
+%token OPENVECTOR
+%token CLOSEVECTOR 
 %token BEGINTOK     
 %token END          
 %token IF           
@@ -46,9 +48,10 @@
 %token DONE
 %token <value> LAMBDATAG
 %token COLON
+%token COMMA
 
 /* declare non-terminals */
-%type <value> program statement assignment if-statement if-else-statement while print statements substatements callfunc exprlambda expression subexpression term subterm factor atom identvalue ident
+%type <value> program statement assignment if-statement if-else-statement while print statements substatements callfunc vector vectorlist exprlambda expression subexpression term subterm factor atom identvalue ident
 
 /* give us more detailed errors */
 %error-verbose
@@ -64,7 +67,7 @@ statement: assignment { $$ = $1; }
          | print { $$ = $1; }
          | statements { $$ = $1; } 
 
-assignment: ident ASSIGN exprlambda SEMICOLON {
+assignment: ident ASSIGN vector SEMICOLON {
     $$ = new Node(ASSIGN, NULL, "");
     attach_node($$, $1);
     attach_node($$, $3);
@@ -89,7 +92,7 @@ while: WHILE expression DO statement {
     attach_node($$, $4);
 }
 
-print: PRINT exprlambda SEMICOLON {
+print: PRINT vector SEMICOLON {
     $$ = new Node(PRINT, NULL, "");
     attach_node($$, $2);
 }
@@ -100,6 +103,13 @@ statements: BEGINTOK substatements END { $$ = $2; }
 
 substatements: statement substatements {$$ = new Node(STATEMENT, NULL, ""); attach_node($$, $1); attach_node($$, $2); }
               | statement  {$$ = new Node(STATEMENT, NULL, ""); attach_node($$, $1); }
+
+vector: OPENVECTOR CLOSEVECTOR { $$ = new Node(VECTOR, std::unique_ptr<Value>(nullptr), ""); /*Empty vector*/ } 
+        | OPENVECTOR vectorlist CLOSEVECTOR { $$ = new Node(VECTOR, std::unique_ptr<Value>(nullptr), ""); attach_node($$, $2); }
+        | exprlambda { $$ = $1; }
+
+vectorlist: exprlambda COMMA vectorlist {$$ = $1; attach_node($$, $3); }
+            | exprlambda { $$ = $1; }
 
 exprlambda: LAMBDATAG ident COLON expression { 
               // Only supports one argument functions for now
@@ -143,6 +153,7 @@ ident: IDENTIFIER { $$ = $1; }
 identvalue: ident { $$ = $1; }
           | VALUE { $$ = $1; }
           | INPUT { $$ = new Node(INPUT, NULL , ""); }
+          | OPENVECTOR identvalue CLOSEVECTOR { $$ = new Node(OPENVECTOR, NULL, ""); attach_node($$, $2); }
 
 
 

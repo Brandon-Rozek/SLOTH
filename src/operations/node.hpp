@@ -51,4 +51,6 @@ std::string tree_string(const Node* node, uint tabs);
 void eval_statement(Node* node, Environment* env);
 Value* eval_expression(Node* node, Environment* env);
 
+Value* parse_vector(Node* node);
+
 #endif
