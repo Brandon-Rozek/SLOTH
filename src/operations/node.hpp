@@ -4,6 +4,7 @@
 #include <string>
 #include <array>
 #include <iostream>
+#include <memory>
 #include "../variables/value.hpp"
 #include "../variables/environment.hpp"
 
@@ -16,7 +17,7 @@ class Environment;
 class Node {
   public:
   int type;
-  Value* value;
+  std::unique_ptr<Value> value;
 
   /* the id of the node (used for identifiers only) */
   std::string id;
@@ -29,17 +30,13 @@ class Node {
 
   std::string toString(void) const;
 
-  Node(int t, Value* v, std::string s) {
+  Node(int t, std::unique_ptr<Value> v, std::string s) : value(std::move(v)) {
     type = t;
-    value = v;
     id = s;
     num_children = 0;
-    for (uint i = 0; i < MAX_CHILDREN; i++) {
-      children[i] = nullptr;
-    }
+    std::fill(children.begin(), children.end(), nullptr);
   }
   ~Node() {
-    // delete value;
     for (uint i = 0; i < num_children; i++) {
       delete children[i];
     }
@@ -47,7 +44,6 @@ class Node {
 };
 
 // Abstract Syntax Tree Functions
-// struct Node* make_node(int type, struct Value* value, std::string id);
 void attach_node(Node* parent, Node* child);
 std::string tree_string(const Node* node, uint tabs);
 

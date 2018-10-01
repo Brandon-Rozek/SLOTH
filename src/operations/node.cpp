@@ -215,7 +215,7 @@ Value* eval_expression(Node* node, Environment* env) {
         return 0;
       }
       // Change to return copy of value [TODO]
-      return new Value(*get_value(var));
+      return get_value(var);
       break;
     //----------
     case VALUE: 
@@ -256,6 +256,7 @@ void eval_statement(Node* node, Environment* env) {
       tempVal = eval_expression(node->children[0], env);
       if (tempVal->type == BOOLEAN) {
         tempLong = get_long(tempVal);
+        delete tempVal;
         if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your if expression" << std::endl; break;}
         if (tempLong[0]) {
           eval_statement(node->children[1], env);
@@ -272,11 +273,13 @@ void eval_statement(Node* node, Environment* env) {
       tempVal = eval_expression(node->children[0], env);
       if (tempVal->type == BOOLEAN) {
         tempLong = get_long(tempVal);
+        delete tempVal;
         if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your while expression" << std::endl; break;}
         while (tempLong[0]) {
           eval_statement(node->children[1], env);
           tempVal = eval_expression(node->children[0], env);
           tempLong = get_long(tempVal);
+          delete tempVal;
           if (tempLong.size() > 1) { std::cerr << "Cannot have a vector of booleans for your while expression" << std::endl; break;}
         }
       } else {
@@ -289,6 +292,7 @@ void eval_statement(Node* node, Environment* env) {
       check_num_nodes(node, 1, "can only print out one expression at a time.");
       tempVal = eval_expression(node->children[0], env);
       std::cout << tempVal << std::endl;
+      delete tempVal;
       break;
     //------------
     case STATEMENT: // Can have a maximum of two children statement nodes
@@ -302,6 +306,8 @@ void eval_statement(Node* node, Environment* env) {
     //------------
     default:
       printf("Error, %d not a valid statement type.\n", node->type);
-      return;
+
   }
+
+  return;
 }

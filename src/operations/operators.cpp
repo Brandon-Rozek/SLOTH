@@ -49,6 +49,9 @@ Value* add(Value* x, Value* y) {
     ans = make_double(doubleResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -91,6 +94,9 @@ Value* subtract(Value* x, Value* y) {
                     std::back_inserter(doubleResult), std::minus<double>());
     ans = make_double(doubleResult);
   }
+
+  delete x;
+  delete y;
 
   return ans;
 }
@@ -135,6 +141,9 @@ Value* division(Value* x, Value* y) {
     ans = make_double(doubleResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -177,6 +186,9 @@ Value* multiplication(Value* x, Value* y) {
                     std::back_inserter(doubleResult), std::multiplies<double>());
     ans = make_double(doubleResult);
   }
+
+  delete x;
+  delete y;
 
   return ans;
 }
@@ -224,6 +236,9 @@ Value* less(Value* x, Value* y) {
     ans = make_booleans(longResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -269,6 +284,9 @@ Value* greater(Value* x, Value* y) {
                     std::back_inserter(longResult), std::greater<double>());
     ans = make_booleans(longResult);
   }
+
+  delete x;
+  delete y;
 
   return ans;
 }
@@ -316,6 +334,9 @@ Value* less_equal(Value* x, Value* y) {
     ans = make_booleans(longResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -362,6 +383,9 @@ Value* greater_equal(Value* x, Value* y) {
     ans = make_booleans(longResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -406,6 +430,9 @@ Value* equals(Value* x, Value* y) {
                     std::back_inserter(longResult), std::equal_to<double>());
     ans = make_booleans(longResult);
   }
+
+  delete x;
+  delete y;
 
   return ans;
 }
@@ -452,6 +479,9 @@ Value* not_equals(Value* x, Value* y) {
     ans = make_booleans(longResult);
   }
 
+  delete x;
+  delete y;
+
   return ans;
 }
 
@@ -464,6 +494,9 @@ Value* and_value(Value* x, Value* y) {
   std::vector<long> y_long = get_long(y);
   std::transform(x_long.begin(), x_long.end(), y_long.begin(),
                   std::back_inserter(longResult), std::logical_and<>());
+
+  delete x;
+  delete y;
 
   return make_booleans(longResult);
 }
@@ -478,6 +511,9 @@ Value* or_value(Value* x, Value* y) {
   std::transform(x_long.begin(), x_long.end(), y_long.begin(),
                   std::back_inserter(longResult), std::logical_or<>());
 
+  delete x;
+  delete y;
+
   return make_booleans(longResult);
 }
 
@@ -488,6 +524,8 @@ Value* not_value(Value* x) {
   std::vector<long> longResult;
   std::vector<long> x_long = get_long(x);
   std::transform(x_long.begin(), x_long.end(), std::back_inserter(longResult), std::logical_not<>());
+
+  delete x;
 
   return make_booleans(longResult);
 }

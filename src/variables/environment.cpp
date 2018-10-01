@@ -21,7 +21,7 @@ void add_variable(Environment* env, Variable* var) {
   // If variable exists, replace it
   Variable* temp_var = find_variable(env, var->id);
   if (temp_var != nullptr) {
-    temp_var->value = var->value;
+    temp_var->value = std::unique_ptr<Value>(new Value(*var->value));
     free(var);
     return;
   }
