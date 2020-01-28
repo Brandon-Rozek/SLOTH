@@ -9,11 +9,11 @@ grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
-  sloth:
+  sloth-brandonrozek:
     command: $SNAP/bin/sloth
 
 parts:
-  sloth:
+  sloth-brandonrozek:
     # See 'snapcraft plugins'
     plugin: make 
     source: https://github.com/Brandon-Rozek/SLOTH.git
