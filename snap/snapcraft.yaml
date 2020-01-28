@@ -1,0 +1,26 @@
+name: sloth # you probably want to 'snapcraft register <name>'
+base: core18 # the base snap is the execution environment for this snap
+version: '0.7' # just for humans, typically '1.2+git' or '1.3.2'
+summary: Interpreted array based programming language. # 79 char long summary
+description: |
+  SLOTH is a programming language Brandon Rozek created for an indepdent study under Ian Finalyson. It is an interpreted language that is array-based like the R programming language.
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+apps:
+  sloth:
+    command: $SNAP/bin/sloth
+
+parts:
+  sloth:
+    # See 'snapcraft plugins'
+    plugin: make 
+    source: https://github.com/Brandon-Rozek/SLOTH.git
+    build-packages:
+      - g++
+      - make
+      - flex
+      - bison
+      - libedit-dev
+
