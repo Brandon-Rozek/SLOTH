@@ -28,6 +28,6 @@ src/shell.o: src/shell.hpp src/shell.cpp
 src/string.o: src/string.h src/string.c
 	$(GPP) -c src/string.c -o src/string.o
 install:
-	install -t $(DESTDIR)/bin/ sloth
+	install -Dt $(DESTDIR)/bin/ sloth
 clean:
 	rm src/parser/lex.yy.c src/parser/parser.tab.c src/parser/parser.tab.h src/parser/lex.yy.o src/parser/parser.tab.o src/variables/environment.o src/variables/variable.o src/variables/value.o src/operations/node.o src/operations/operators.o src/string.o src/shell.o sloth
